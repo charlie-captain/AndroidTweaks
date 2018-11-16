@@ -1,1 +1,1 @@
-include ':phoneyin', ':app', ':base', ':instantapp'
+include ':phoneyin', ':app', ':base', ':instantapp', ':androidtweaks'
