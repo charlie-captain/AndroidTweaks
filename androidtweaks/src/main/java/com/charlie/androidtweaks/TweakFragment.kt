@@ -1,52 +1,79 @@
 package com.charlie.androidtweaks
 
 import android.os.Bundle
-import android.support.v7.preference.*
+import android.util.Log
+import android.view.View
+import androidx.preference.Preference
+import androidx.preference.PreferenceScreen
 
 
-class TweakFragment : PreferenceFragmentCompat() {
+class TweakFragment : BasePreferenceFragment() {
 
+    private lateinit var tweaks: ArrayList<Tweak>
+    //collections
+    private var heads: MutableSet<String>
+    //tweaks of each head
+    private var headsTweaks: MutableMap<String, ArrayList<Tweak>>
+    private lateinit var categorys: ArrayList<String>
 
-    private var category: ArrayList<Tweak>? = null
+    companion object {
 
+        private val key = "tweakfragment"
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        val context = preferenceManager.context
-//        addPreferencesFromResource(R.xml.preference)
-
-        val screen = preferenceManager.createPreferenceScreen(context)
-
-        val category1 = PreferenceCategory(context)
-        category1.title = "button"
-        category1.summary = "what is the problem"
-        category1.key = "bbb"
-
-        val swithButton = SwitchPreferenceCompat(context)
-        swithButton.title = "button"
-        swithButton.summary = "summary"
-        swithButton.key = "sss"
-
-        val swithButton2 = EditTextPreference(context)
-        swithButton2.title = "edit"
-
-        val swithButton3 = SeekBarPreference(context)
-        swithButton3.title = "seekbar"
-        swithButton3.value = 1
-
-
-        screen.addPreference(category1)
-        category1.addPreference(swithButton)
-
-        val category2 = PreferenceCategory(context)
-        category2.title = "category2"
-
-        screen.addPreference(category2)
-
-        category2.addPreference(swithButton2)
-        category2.addPreference(swithButton3)
-        preferenceScreen = screen
+        fun newInstance(tweaks: ArrayList<Tweak>): TweakFragment {
+            val bundle = Bundle()
+            bundle.putParcelableArrayList(key, tweaks)
+            val fragment = TweakFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
 
     }
 
+    init {
+        heads = mutableSetOf()
+        headsTweaks = mutableMapOf()
+    }
 
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        val context = preferenceManager.context
+        val screen = preferenceManager.createPreferenceScreen(context)
+
+        tweaks = arguments?.getParcelableArrayList<Tweak>(key) as ArrayList<Tweak>
+
+
+        for (i in tweaks) {
+            heads.add(i.collection)
+        }
+
+        for (i in heads) {
+            Log.d("ss", i)
+            val preference = Preference(context)
+            preference.title = i
+            preference.setOnPreferenceClickListener {
+                val fragment = TweakChildFragment.newInstance(i, headsTweaks.get(i) as ArrayList<Tweak>)
+                requireFragmentManager().beginTransaction()
+                    .replace(R.id.fl_tweak, fragment)
+                    .addToBackStack("tweak_child")
+                    .commit()
+                false
+            }
+            screen.addPreference(preference)
+        }
+
+        preferenceScreen = screen
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        for (i in heads) {
+            var list = mutableListOf<Tweak>()
+            for (j in tweaks) {
+                if (i.equals(j.collection)) {
+                    list.add(j)
+                }
+            }
+            headsTweaks.put(i, list as ArrayList<Tweak>)
+        }
+    }
 }
