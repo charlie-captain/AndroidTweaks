@@ -1,21 +1,22 @@
 package com.charlie.record.phoneyin
 
-import android.content.Intent
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.charlie.androidtweaks.TweakActivity
+import com.charlie.androidtweaks.Tweak
+import com.charlie.androidtweaks.TweakManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
 
     override fun init() {
-
-//        supportFragmentManager.inTransaction {
-//            replace(R.id.fl_content,TweakFragment())
-//        }
-
         btn.setOnClickListener {
-            startActivity(Intent(this, TweakActivity::class.java))
+            //            startActivity(Intent(this, TweakActivity::class.java))
+
+            var list: MutableList<Tweak> = arrayListOf()
+
+
+
+            TweakManager.with(this).addAll(list).start()
         }
     }
 
