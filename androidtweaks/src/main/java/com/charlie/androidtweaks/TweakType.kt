@@ -1,10 +1,9 @@
 package com.charlie.androidtweaks
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import java.io.Serializable
 
-@Parcelize
-open class TweakType : Parcelable {
+//@Parcelize
+//open class TweakType : Parcelable {
 //    boolean
 //    ,
 //    integer
@@ -20,14 +19,14 @@ open class TweakType : Parcelable {
 //    stringList
 //    ,
 //    action
-    //    boolean, integer, float, double, color, string, action
-//    val defaultValue : TweakViewDataType
+//    //    boolean, integer, float, double, color, string, action
+////    val defaultValue : TweakViewDataType
+//
+//    open var tweakViewDataType: TweakViewDataType = TweakViewDataType.default
+//
+//}
 
-    open var tweakViewDataType: TweakViewDataType = TweakViewDataType.default
-
-}
-
-enum class TweakViewDataType {
+enum class TweakViewDataType :Serializable{
     boolean,
     integer,
     cgFloat,
@@ -39,18 +38,18 @@ enum class TweakViewDataType {
     default
 }
 
-class TBool : TweakType() {
-    override var tweakViewDataType: TweakViewDataType = TweakViewDataType.boolean
-}
-
-class TInt : TweakType() {
-    override var tweakViewDataType: TweakViewDataType = TweakViewDataType.integer
-}
-
-class TFloat : TweakType() {
-
-    override var tweakViewDataType: TweakViewDataType = TweakViewDataType.cgFloat
-}
-
-
+//class TBool : TweakType() {
+//    override var tweakViewDataType: TweakViewDataType = TweakViewDataType.boolean
+//}
+//
+//class TInt : TweakType() {
+//    override var tweakViewDataType: TweakViewDataType = TweakViewDataType.integer
+//}
+//
+//class TFloat : TweakType() {
+//
+//    override var tweakViewDataType: TweakViewDataType = TweakViewDataType.cgFloat
+//}
+//
+//
 

@@ -1,24 +1,27 @@
 package com.charlie.androidtweaks
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import kotlinx.android.synthetic.main.include_toolbar.*
 
 class TweakActivity : AppCompatActivity() {
 
     lateinit var baseFragment: TweakFragment
-    lateinit var tweaks: ArrayList<Tweak<TweakType>>
+    lateinit var tweaks: ArrayList<Tweak>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tweak)
-        tweaks = intent.getParcelableArrayListExtra<Tweak<TweakType>>(TweakManager.key)
-        baseFragment = TweakFragment.newInstance(tweaks)
-        for(i in tweaks){
-            Log.d("ss","${i.maxValue}")
+        setSupportActionBar(toolbar)
+        toolbar.title = "Android Tweaks"
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
         }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        tweaks = intent.getSerializableExtra(TweakManager.key) as ArrayList<Tweak>
+        baseFragment = TweakFragment.newInstance(tweaks)
         supportFragmentManager.inTransaction {
             replace(R.id.fl_tweak, baseFragment)
         }

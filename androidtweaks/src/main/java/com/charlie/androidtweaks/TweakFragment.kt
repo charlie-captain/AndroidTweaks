@@ -1,13 +1,11 @@
 package com.charlie.androidtweaks
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.preference.Preference
-import androidx.preference.PreferenceScreen
 
 
-class TweakFragment : BasePreferenceFragment() {
+class TweakFragment : BaseFragment() {
 
     private lateinit var tweaks: ArrayList<Tweak>
     //collections
@@ -22,7 +20,7 @@ class TweakFragment : BasePreferenceFragment() {
 
         fun newInstance(tweaks: ArrayList<Tweak>): TweakFragment {
             val bundle = Bundle()
-            bundle.putParcelableArrayList(key, tweaks)
+            bundle.putSerializable(key, tweaks)
             val fragment = TweakFragment()
             fragment.arguments = bundle
             return fragment
@@ -39,7 +37,7 @@ class TweakFragment : BasePreferenceFragment() {
         val context = preferenceManager.context
         val screen = preferenceManager.createPreferenceScreen(context)
 
-        tweaks = arguments?.getParcelableArrayList<Tweak>(key) as ArrayList<Tweak>
+        tweaks = arguments?.getSerializable(key) as ArrayList<Tweak>
 
 
         for (i in tweaks) {
@@ -47,7 +45,6 @@ class TweakFragment : BasePreferenceFragment() {
         }
 
         for (i in heads) {
-            Log.d("ss", i)
             val preference = Preference(context)
             preference.title = i
             preference.setOnPreferenceClickListener {

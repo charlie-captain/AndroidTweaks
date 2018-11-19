@@ -1,11 +1,13 @@
 package com.charlie.androidtweaks
 
 import android.os.Bundle
-import androidx.preference.*
+import androidx.preference.PreferenceCategory
+import androidx.preference.SeekBarPreference
+import androidx.preference.SwitchPreferenceCompat
 
-class TweakChildFragment : BasePreferenceFragment() {
+class TweakChildFragment : BaseFragment() {
 
-    private lateinit var tweaks: ArrayList<Tweak<TweakType>>
+    private lateinit var tweaks: ArrayList<Tweak>
     private var categorys: MutableSet<String>
     private lateinit var collection: String
 
@@ -13,10 +15,10 @@ class TweakChildFragment : BasePreferenceFragment() {
         private val keyCollection = "collection"
         private val keyTweaks = "child_tweaks"
 
-        fun newInstance(collection: String, tweaks: ArrayList<Tweak<TweakType>>): TweakChildFragment {
+        fun newInstance(collection: String, tweaks: ArrayList<Tweak>): TweakChildFragment {
             val bundle = Bundle()
             bundle.putString(keyCollection, collection)
-            bundle.putParcelableArrayList(keyTweaks, tweaks)
+            bundle.putSerializable(keyTweaks, tweaks)
             val fragment = TweakChildFragment()
             fragment.arguments = bundle
             return fragment
@@ -31,7 +33,7 @@ class TweakChildFragment : BasePreferenceFragment() {
         val context = preferenceManager.context
         val screen = preferenceManager.createPreferenceScreen(context)
 
-        tweaks = arguments?.getParcelableArrayList<Tweak<TweakType>>(keyTweaks) as ArrayList<Tweak<TweakType>>
+        tweaks = arguments?.getSerializable(keyTweaks) as ArrayList<Tweak>
         collection = arguments?.getString(keyCollection)!!
 
         for (each in tweaks) {
@@ -45,22 +47,21 @@ class TweakChildFragment : BasePreferenceFragment() {
             for (t in tweaks) {
                 if (t.category.equals(c)) {
                     when (t.type) {
-                        TweakType.boolean -> {
+                        TweakViewDataType.boolean -> {
                             val switchPreference = SwitchPreferenceCompat(context)
                             switchPreference.title = t.title
-                            switchPreference.setDefaultValue(t.defaultValue)
+                            switchPreference.setDefaultValue(t.defaultBoolValue)
                             category.addPreference(switchPreference)
                         }
-                        TweakType.integer,
-                        TweakType.double,
-                        TweakType.float -> {
+                        TweakViewDataType.integer,
+                        TweakViewDataType.double,
+                        TweakViewDataType.cgFloat -> {
                             val seekBarPreference = SeekBarPreference(context)
                             seekBarPreference.title = t.title
-                            seekBarPreference.max = t.maxValue as Int
-                            seekBarPreference.min = t.minValue as Int
-                            seekBarPreference.setDefaultValue(t.defaultValue)
+                            seekBarPreference.max = t.maxIntValue as Int
+                            seekBarPreference.min = t.minIntValue as Int
+                            seekBarPreference.setDefaultValue(t.defaultIntValue)
                             seekBarPreference.setOnPreferenceChangeListener { preference, newValue ->
-
                                 true
                             }
                             category.addPreference(seekBarPreference)

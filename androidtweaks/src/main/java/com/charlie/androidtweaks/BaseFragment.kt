@@ -4,7 +4,7 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 
-abstract class BasePreferenceFragment : PreferenceFragmentCompat() {
+abstract class BaseFragment : PreferenceFragmentCompat() {
 
     //fix the left padding
     override fun setPreferenceScreen(preferenceScreen: PreferenceScreen?) {
