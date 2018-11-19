@@ -1,5 +1,6 @@
 package com.charlie.record.phoneyin
 
+import android.view.View
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.charlie.androidtweaks.Tweak
@@ -29,4 +30,10 @@ class MainActivity : BaseActivity() {
         transaction.commit()
     }
 
+    override fun onResume() {
+        super.onResume()
+        ExampleTweakLibrary.bind(ExampleTweakLibrary.switchButton1, {
+            btn.visibility = if (it as Boolean) View.VISIBLE else View.INVISIBLE
+        })
+    }
 }

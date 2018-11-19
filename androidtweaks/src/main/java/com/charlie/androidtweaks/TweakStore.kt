@@ -9,7 +9,8 @@ class TweakStore {
 
     }
 
-    fun bind(tweak: Tweak, func: (a:Any) -> Tweak) {
+    fun bind(tweak: Tweak, func: (a:Any) -> Unit) {
+
 
         func(currentValueforTweak(tweak))
 

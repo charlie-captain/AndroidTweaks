@@ -4,7 +4,7 @@ import com.charlie.androidtweaks.Tweak
 import com.charlie.androidtweaks.TweakLibrary
 import com.charlie.androidtweaks.TweakViewDataType
 
-class ExampleTweakLibrary : TweakLibrary() {
+object ExampleTweakLibrary : TweakLibrary() {
 
 
     val switchButton1 = Tweak("AAA", "sa", "button", TweakViewDataType.boolean, true)

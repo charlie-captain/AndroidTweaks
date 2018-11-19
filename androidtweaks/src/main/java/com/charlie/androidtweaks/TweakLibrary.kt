@@ -7,13 +7,12 @@ open class TweakLibrary {
         open var tweakStore = TweakStore()
     }
 
-    open fun bind(tweak: Tweak, func: (a: Any) -> Tweak) {
+    open fun bind(tweak: Tweak, func: (a: Any) -> Unit) {
         tweakStore.bind(tweak, func)
     }
 
     open fun unbind(tweak: Tweak) {
-
-    }
+            }
 
 
 }
