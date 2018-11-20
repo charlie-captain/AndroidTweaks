@@ -9,7 +9,7 @@ object TweakManager {
 
     private var tweaks: ArrayList<Tweak> = arrayListOf()
 
-    open lateinit var weakReference: WeakReference<Context>
+    lateinit var weakReference: WeakReference<Context>
 
     val key = "key_tweak"
 

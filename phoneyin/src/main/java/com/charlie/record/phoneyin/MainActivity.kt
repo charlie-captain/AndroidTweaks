@@ -1,23 +1,22 @@
 package com.charlie.record.phoneyin
 
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.charlie.androidtweaks.Tweak
 import com.charlie.androidtweaks.TweakManager
+import com.charlie.androidtweaks.TweakViewDataType
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
 
     override fun init() {
+        ExampleTweakLibrary.add(Tweak("UI", "button", "width", TweakViewDataType.integer, btn.width, 0, 500))
+
+        TweakManager.with(this).addAll(ExampleTweakLibrary.tweakStore.tweaks)
         btn.setOnClickListener {
-            //            startActivity(Intent(this, TweakActivity::class.java))
-
-            var list: MutableList<Tweak> = arrayListOf()
-
-
-
-            TweakManager.with(this).addAll(list).start()
+            TweakManager.start()
         }
     }
 
@@ -32,8 +31,15 @@ class MainActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        ExampleTweakLibrary.bind(ExampleTweakLibrary.switchButton1, {
-            btn.visibility = if (it as Boolean) View.VISIBLE else View.INVISIBLE
-        })
+        ExampleTweakLibrary.bind(ExampleTweakLibrary.switchButton1) {
+            btn_example.visibility = if (it as Boolean) View.VISIBLE else View.INVISIBLE
+            Log.d("visibility", it.toString())
+        }
+
+        ExampleTweakLibrary.bind(ExampleTweakLibrary.getTweakbyKey("UI_button_width")) {
+            var layout = btn_example.layoutParams
+            layout.width = it as Int
+            btn_example.layoutParams = layout
+        }
     }
 }

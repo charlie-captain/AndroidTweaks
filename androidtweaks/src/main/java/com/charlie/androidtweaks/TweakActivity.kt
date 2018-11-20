@@ -43,6 +43,5 @@ class TweakActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        TweakManager.clear()
     }
 }

@@ -1,18 +1,27 @@
 package com.charlie.androidtweaks
 
-open class TweakLibrary {
+abstract class TweakLibrary {
 
-    companion object {
+    abstract val tweakStore: TweakStore
 
-        open var tweakStore = TweakStore()
-    }
-
-    open fun bind(tweak: Tweak, func: (a: Any) -> Unit) {
+    fun bind(tweak: Tweak?, func: (a: Any) -> Unit) {
         tweakStore.bind(tweak, func)
     }
 
-    open fun unbind(tweak: Tweak) {
-            }
+    fun unbind(tweak: Tweak) {
+        tweakStore.unbind(tweak)
+    }
+
+    fun add(tweak: Tweak) {
+        tweakStore.tweaks.add(tweak)
+    }
 
 
+    fun addAll(tweaks: ArrayList<Tweak>) {
+        tweakStore.tweaks.addAll(tweaks)
+    }
+
+    fun getTweakbyKey(key: String): Tweak? {
+        return tweakStore.getTweakbyKey(key)
+    }
 }

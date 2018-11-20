@@ -82,14 +82,29 @@ class TweakChildFragment : BaseFragment(), Preference.OnPreferenceChangeListener
         preferenceScreen = screen
     }
 
+    /**
+     * SaveTweaks
+     */
     override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
-
-        tweakMap.containsKey(preference?.key)?.let {
-
+        val key = preference!!.key
+        tweakMap.containsKey(key).let {
+            if (it) {
+                tweakMap.get(key)?.let {
+                    val default = when (it.type) {
+                        TweakViewDataType.boolean -> it.defaultBoolValue
+                        TweakViewDataType.integer -> it.defaultIntValue
+                        else -> {
+                            throw IllegalArgumentException(TweakConstant.EXCEPTION_ILLEGAL_ARGUMENT)
+                        }
+                    }
+                    var putValue by TweakSharepreference(key, default)
+                    putValue = newValue!!
+                }
+            }
         }
 
 
-        return false
+        return true
     }
 
 

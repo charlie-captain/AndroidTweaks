@@ -2,21 +2,24 @@ package com.charlie.androidtweaks
 
 class TweakStore {
 
-    lateinit var tweaks: Set<Any>
+    lateinit var tweaks: ArrayList<Tweak>
 
 
     init {
 
     }
 
-    fun bind(tweak: Tweak, func: (a:Any) -> Unit) {
+    fun bind(tweak: Tweak?, func: (a: Any) -> Unit) {
 
+        if (tweak == null) {
+            return
+        }
 
         func(currentValueforTweak(tweak))
 
     }
 
-    fun unbind(tweak: Tweak){
+    fun unbind(tweak: Tweak) {
 
     }
 
@@ -29,11 +32,23 @@ class TweakStore {
                 throw IllegalArgumentException("androidTweaks unable to deal with this type.")
             }
         }
-        return TweakSharepreference(key, value)
+        val spTweak by TweakSharepreference(key, value)
+
+        return spTweak
     }
 
 
     fun getTweakKey(tweak: Tweak): String {
         return "${tweak.collection}_${tweak.category}_${tweak.title}"
+    }
+
+    fun getTweakbyKey(key: String): Tweak? {
+        for (tweak in tweaks) {
+            val keyTweak = getTweakKey(tweak)
+            if (keyTweak == key) {
+                return tweak
+            }
+        }
+        return null
     }
 }
