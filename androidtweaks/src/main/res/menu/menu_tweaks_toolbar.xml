@@ -6,4 +6,10 @@
             android:title="Dissmiss"
             app:showAsAction="always"
     />
+
+    <item
+        android:id="@+id/menu_toolbar_tweak_reset"
+        android:title="RESET ALL"
+        app:showAsAction="never"
+        />
 </menu>

@@ -28,6 +28,7 @@ class MainActivity : BaseActivity() {
             )
         )
 
+        //button高度
         ExampleTweakLibrary.add(
             Tweak(
                 "UI",
@@ -40,19 +41,8 @@ class MainActivity : BaseActivity() {
             )
         )
 
-        ExampleTweakLibrary.add(
-            Tweak(
-                "UI",
-                "button",
-                "width",
-                TweakViewDataType.integer,
-                btn.width,
-                0,
-                screenWidth
-            )
-        )
 
-        TweakManager.with(this).addAll(ExampleTweakLibrary.tweakStore.tweaks)
+        TweakManager.with(this).initLibrary(ExampleTweakLibrary)
 
         btn.setOnClickListener {
             TweakManager.start()
@@ -70,14 +60,25 @@ class MainActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+
+
         ExampleTweakLibrary.bind(ExampleTweakLibrary.switchButton1) {
             btn_example.visibility = if (it as Boolean) View.VISIBLE else View.INVISIBLE
             Log.d("visibility", it.toString())
         }
 
-        ExampleTweakLibrary.bind(ExampleTweakLibrary.getTweakbyKey("UI_button_width")) {
-            var layout = btn_example.layoutParams
-            layout.width = it as Int
+        val buttonTweaks = arrayListOf<Tweak>(
+            ExampleTweakLibrary.getTweakFromKey("UI_button_width")!!,
+            ExampleTweakLibrary.getTweakFromKey("UI_button_height")!!
+        )
+
+        ExampleTweakLibrary.bindMultiple(buttonTweaks) {
+            val width = ExampleTweakLibrary.getTweakValue("UI_button_width")
+            val height = ExampleTweakLibrary.getTweakValue("UI_button_height")
+
+            val layout = btn_example.layoutParams
+            layout.width = width as Int
+            layout.height = height as Int
             btn_example.layoutParams = layout
         }
     }

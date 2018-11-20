@@ -52,8 +52,12 @@ class TweakActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.menu_toolbar_tweak_dissmiss) {
-            finish()
+        when (item?.itemId) {
+            R.id.menu_toolbar_tweak_dissmiss -> finish()
+            R.id.menu_toolbar_tweak_reset -> {
+                TweakManager.reset()
+                finish()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

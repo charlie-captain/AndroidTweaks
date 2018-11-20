@@ -13,9 +13,9 @@ class TweakFragment : TweakBaseFragment() {
 
     private lateinit var tweaks: ArrayList<Tweak>
     //collections
-    private var heads: MutableSet<String>
+    private var heads: HashSet<String> = HashSet()
     //tweaks of each head
-    private var headsTweaks: MutableMap<String, ArrayList<Tweak>>
+    private var headsTweaks: HashMap<String, ArrayList<Tweak>> = HashMap()
     private lateinit var categorys: ArrayList<String>
 
     companion object {
@@ -27,11 +27,6 @@ class TweakFragment : TweakBaseFragment() {
                     putSerializable(KEY_TWEAKS, tweaks)
                 }
             }
-    }
-
-    init {
-        heads = mutableSetOf()
-        headsTweaks = mutableMapOf()
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

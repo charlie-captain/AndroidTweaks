@@ -10,7 +10,7 @@ data class Tweak(
     val collection: String,
     val category: String,
     val title: String,
-    val type : TweakViewDataType
+    val type: TweakViewDataType
 ) : Serializable {
 
     var defaultBoolValue: Boolean
@@ -21,17 +21,25 @@ data class Tweak(
 
     var minIntValue: Int
 
+    var boolValue: Boolean
+
+    var intValue: Int
+
     init {
         defaultBoolValue = false
         maxIntValue = 0
         minIntValue = 0
         defaultIntValue = 0
+        boolValue = defaultBoolValue
+        intValue = defaultIntValue
     }
+
     constructor(
         topic: String, category: String, title: String, type: TweakViewDataType, defaultValue: Boolean
     ) : this(topic, category, title, type) {
         defaultBoolValue = defaultValue
     }
+
     constructor(
         topic: String, category: String, title: String, type: TweakViewDataType, defaultValue: Int,
         minValue: Int,
@@ -43,4 +51,16 @@ data class Tweak(
     }
 
 
+    override fun equals(other: Any?): Boolean {
+        return super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
+
+    fun reset() {
+        boolValue = defaultBoolValue
+        intValue = defaultIntValue
+    }
 }

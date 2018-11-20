@@ -10,7 +10,7 @@ object ExampleTweakLibrary : TweakLibrary() {
     //static
     val switchButton1 =
         Tweak("UI", "button", "visibility", TweakViewDataType.boolean, true)
-//    val switchButton2 = Tweak("UI", "button", "width", TweakViewDataType.integer, 14, 0, 100)
+    //    val switchButton2 = Tweak("UI", "button", "width", TweakViewDataType.integer, 14, 0, 100)
 //    val switchButton3 = Tweak("UI", "button", "height", TweakViewDataType.integer, 66, 0, 100)
 //    val switchButton4 = Tweak("UI", "button", "size", TweakViewDataType.integer, 11, 0, 100)
 //    val switchButton5 = Tweak("UI", "button", "rotate", TweakViewDataType.integer, 0, 0, 100)
@@ -20,19 +20,16 @@ object ExampleTweakLibrary : TweakLibrary() {
     val switchButton14 = Tweak("BBB", "sd", "button", TweakViewDataType.boolean, false)
 
 
-    override val tweakStore = TweakStore().apply {
-        tweaks = arrayListOf(
-            switchButton1,
+    override val tweakStore = TweakStore().listOf(
+        switchButton1,
 //            switchButton2,
 //            switchButton3,
 //            switchButton4,
 //            switchButton5,
-            switchButton11,
-            switchButton12,
-            switchButton13,
-            switchButton14
-        )
-    }
-
+        switchButton11,
+        switchButton12,
+        switchButton13,
+        switchButton14
+    )
 }
 

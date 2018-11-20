@@ -10,6 +10,10 @@ abstract class TweakLibrary {
         tweakStore.bind(tweak, func)
     }
 
+    fun bindMultiple(tweaks: ArrayList<Tweak>, func: () -> Unit) {
+        tweakStore.bindMultiple(tweaks, func)
+    }
+
     fun unbind(tweak: Tweak) {
         tweakStore.unbind(tweak)
     }
@@ -23,7 +27,21 @@ abstract class TweakLibrary {
         tweakStore.tweaks.addAll(tweaks)
     }
 
-    fun getTweakbyKey(key: String): Tweak? {
-        return tweakStore.getTweakbyKey(key)
+    fun getTweakFromKey(key: String): Tweak? {
+        return tweakStore.getTweakFromKey(key)
     }
+
+    fun getTweakValue(tweak: Tweak): Any? {
+        return tweakStore.currentValueforTweak(tweak)
+    }
+
+    fun getTweakValue(key: String): Any? {
+        return getTweakFromKey(key)?.let { tweakStore.currentValueforTweak(it) }
+    }
+
+    fun reset() {
+        tweakStore.reset()
+    }
+
+    fun getTweaks() = tweakStore.tweaks
 }

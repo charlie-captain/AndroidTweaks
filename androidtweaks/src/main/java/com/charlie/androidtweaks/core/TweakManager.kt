@@ -3,13 +3,12 @@ package com.charlie.androidtweaks.core
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.charlie.androidtweaks.data.Tweak
 import com.charlie.androidtweaks.ui.TweakActivity
 import java.lang.ref.WeakReference
 
 object TweakManager {
 
-    private var tweaks: ArrayList<Tweak> = arrayListOf()
+    private lateinit var library: TweakLibrary
 
     lateinit var weakReference: WeakReference<Context>
 
@@ -20,14 +19,20 @@ object TweakManager {
         return this
     }
 
-    fun add(t: Tweak): TweakManager {
-        tweaks.add(t)
-        return this
+
+    fun initLibrary(library: TweakLibrary) {
+        this.library = library
     }
 
-    fun addAll(list: List<Tweak>): TweakManager {
-        tweaks.addAll(list)
-        return this
+    fun reset() {
+        library.reset()
+    }
+
+    /**
+     * when application was killed that the ps.clear
+     */
+    fun applyPersistent(isPersistent: Boolean) {
+
     }
 
     fun start() {
@@ -36,7 +41,7 @@ object TweakManager {
             var bundle = Bundle()
             bundle.putSerializable(
                 key,
-                tweaks
+                library.getTweaks()
             )
             intent.putExtras(bundle)
             it?.startActivity(intent)
