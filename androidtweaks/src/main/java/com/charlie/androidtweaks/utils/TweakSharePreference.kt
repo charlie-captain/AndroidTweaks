@@ -1,11 +1,13 @@
-package com.charlie.androidtweaks
+package com.charlie.androidtweaks.utils
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import com.charlie.androidtweaks.core.TweakManager
+import com.charlie.androidtweaks.data.TweakConstant
 import kotlin.reflect.KProperty
 
-class TweakSharepreference<T>(val name: String, val default: T) {
+class TweakSharePreference<T>(val name: String, val default: T) {
 
     private val spName = "sp_tweak_file"
 

@@ -1,10 +1,13 @@
-package com.charlie.androidtweaks
+package com.charlie.androidtweaks.ui
 
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 
-abstract class BaseFragment : PreferenceFragmentCompat() {
+/**
+ * fix left padding bug
+ */
+abstract class TweakBaseFragment : PreferenceFragmentCompat() {
 
     //fix the left padding
     override fun setPreferenceScreen(preferenceScreen: PreferenceScreen?) {

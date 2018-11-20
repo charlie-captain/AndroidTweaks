@@ -4,17 +4,53 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.charlie.androidtweaks.Tweak
-import com.charlie.androidtweaks.TweakManager
-import com.charlie.androidtweaks.TweakViewDataType
+import com.charlie.androidtweaks.core.TweakManager
+import com.charlie.androidtweaks.data.Tweak
+import com.charlie.androidtweaks.data.TweakViewDataType
+import com.charlie.record.phoneyin.sample.ExampleTweakLibrary
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
 
     override fun init() {
         val screenWidth = resources.displayMetrics.widthPixels
-        //动态添加
-        ExampleTweakLibrary.add(Tweak("UI", "button", "width", TweakViewDataType.integer, btn.width, 0, screenWidth))
+        val screenHeight = resources.displayMetrics.heightPixels
+        //动态添加,下面举个例子
+        ExampleTweakLibrary.add(
+            Tweak(
+                "UI",
+                "button",
+                "width",
+                TweakViewDataType.integer,
+                btn.width,
+                0,
+                screenWidth
+            )
+        )
+
+        ExampleTweakLibrary.add(
+            Tweak(
+                "UI",
+                "button",
+                "height",
+                TweakViewDataType.integer,
+                btn.height,
+                0,
+                screenHeight
+            )
+        )
+
+        ExampleTweakLibrary.add(
+            Tweak(
+                "UI",
+                "button",
+                "width",
+                TweakViewDataType.integer,
+                btn.width,
+                0,
+                screenWidth
+            )
+        )
 
         TweakManager.with(this).addAll(ExampleTweakLibrary.tweakStore.tweaks)
 

@@ -1,14 +1,15 @@
-package com.charlie.record.phoneyin
+package com.charlie.record.phoneyin.sample
 
-import com.charlie.androidtweaks.Tweak
-import com.charlie.androidtweaks.TweakLibrary
-import com.charlie.androidtweaks.TweakStore
-import com.charlie.androidtweaks.TweakViewDataType
+import com.charlie.androidtweaks.core.TweakLibrary
+import com.charlie.androidtweaks.core.TweakStore
+import com.charlie.androidtweaks.data.Tweak
+import com.charlie.androidtweaks.data.TweakViewDataType
 
 object ExampleTweakLibrary : TweakLibrary() {
 
     //static
-    val switchButton1 = Tweak("UI", "button", "visibility", TweakViewDataType.boolean, true)
+    val switchButton1 =
+        Tweak("UI", "button", "visibility", TweakViewDataType.boolean, true)
 //    val switchButton2 = Tweak("UI", "button", "width", TweakViewDataType.integer, 14, 0, 100)
 //    val switchButton3 = Tweak("UI", "button", "height", TweakViewDataType.integer, 66, 0, 100)
 //    val switchButton4 = Tweak("UI", "button", "size", TweakViewDataType.integer, 11, 0, 100)

@@ -1,4 +1,6 @@
-package com.charlie.androidtweaks
+package com.charlie.androidtweaks.core
+
+import com.charlie.androidtweaks.data.Tweak
 
 abstract class TweakLibrary {
 

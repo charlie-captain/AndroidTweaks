@@ -1,4 +1,4 @@
-package com.charlie.androidtweaks
+package com.charlie.androidtweaks.ui
 
 import android.os.Bundle
 import android.view.Menu
@@ -6,11 +6,14 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.charlie.androidtweaks.R
+import com.charlie.androidtweaks.core.TweakManager
+import com.charlie.androidtweaks.data.Tweak
 import kotlinx.android.synthetic.main.tweaks_toolbar.*
 
 class TweakActivity : AppCompatActivity() {
 
-    lateinit var baseFragment: TweakFragment
+    lateinit var baseFragmentFragment: TweakFragment
     lateinit var tweaks: ArrayList<Tweak>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,9 +26,9 @@ class TweakActivity : AppCompatActivity() {
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         tweaks = intent.getSerializableExtra(TweakManager.key) as ArrayList<Tweak>
-        baseFragment = TweakFragment.newInstance(tweaks)
+        baseFragmentFragment = TweakFragment.newInstance(tweaks)
         supportFragmentManager.inTransaction {
-            replace(R.id.fl_tweak, baseFragment)
+            replace(R.id.fl_tweak, baseFragmentFragment)
         }
     }
 

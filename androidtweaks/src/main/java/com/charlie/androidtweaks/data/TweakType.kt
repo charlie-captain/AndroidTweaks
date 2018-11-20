@@ -1,4 +1,4 @@
-package com.charlie.androidtweaks
+package com.charlie.androidtweaks.data
 
 import java.io.Serializable
 

@@ -1,12 +1,16 @@
-package com.charlie.androidtweaks
+package com.charlie.androidtweaks.data
 
 import java.io.Serializable
 
+/**
+ * why use Serializable?
+ * :because parcelable is not supported
+ */
 data class Tweak(
     val collection: String,
     val category: String,
     val title: String,
-    val type :TweakViewDataType
+    val type : TweakViewDataType
 ) : Serializable {
 
     var defaultBoolValue: Boolean

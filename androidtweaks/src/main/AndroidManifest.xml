@@ -3,7 +3,7 @@
           package="com.charlie.androidtweaks">
 
     <application>
-        <activity android:name=".TweakActivity"
+        <activity android:name=".ui.TweakActivity"
          android:theme="@style/AppTheme">
         </activity>
     </application>

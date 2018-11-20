@@ -1,11 +1,15 @@
-package com.charlie.androidtweaks
+package com.charlie.androidtweaks.ui
+
 
 import android.os.Bundle
 import android.view.View
 import androidx.preference.Preference
+import com.charlie.androidtweaks.R
+import com.charlie.androidtweaks.data.Tweak
 
+private const val KEY_TWEAKS = "tweakfragment"
 
-class TweakFragment : BaseFragment() {
+class TweakFragment : TweakBaseFragment() {
 
     private lateinit var tweaks: ArrayList<Tweak>
     //collections
@@ -16,16 +20,13 @@ class TweakFragment : BaseFragment() {
 
     companion object {
 
-        private val key = "tweakfragment"
 
-        fun newInstance(tweaks: ArrayList<Tweak>): TweakFragment {
-            val bundle = Bundle()
-            bundle.putSerializable(key, tweaks)
-            val fragment = TweakFragment()
-            fragment.arguments = bundle
-            return fragment
-        }
-
+        fun newInstance(tweaks: ArrayList<Tweak>) =
+            TweakFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(KEY_TWEAKS, tweaks)
+                }
+            }
     }
 
     init {
@@ -37,7 +38,7 @@ class TweakFragment : BaseFragment() {
         val context = preferenceManager.context
         val screen = preferenceManager.createPreferenceScreen(context)
 
-        tweaks = arguments?.getSerializable(key) as ArrayList<Tweak>
+        tweaks = arguments?.getSerializable(KEY_TWEAKS) as ArrayList<Tweak>
 
 
         for (i in tweaks) {

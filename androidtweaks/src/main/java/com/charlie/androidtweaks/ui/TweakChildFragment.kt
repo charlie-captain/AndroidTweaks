@@ -1,12 +1,19 @@
-package com.charlie.androidtweaks
+package com.charlie.androidtweaks.ui
 
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
-import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
+import com.charlie.androidtweaks.data.Tweak
+import com.charlie.androidtweaks.data.TweakConstant
+import com.charlie.androidtweaks.data.TweakViewDataType
+import com.charlie.androidtweaks.utils.TweakSharePreference
+import com.charlie.androidtweaks.view.TweakSeekbarPrefence
 
-class TweakChildFragment : BaseFragment(), Preference.OnPreferenceChangeListener {
+private const val KEY_COLLECTIONS = "collection"
+private const val KEY_TWEAKS = "child_tweaks"
+
+class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeListener {
     private lateinit var tweaks: ArrayList<Tweak>
 
     private lateinit var tweakMap: MutableMap<String, Tweak>
@@ -14,17 +21,13 @@ class TweakChildFragment : BaseFragment(), Preference.OnPreferenceChangeListener
     private lateinit var collection: String
 
     companion object {
-
-        private val keyCollection = "collection"
-        private val keyTweaks = "child_tweaks"
-        fun newInstance(collection: String, tweaks: ArrayList<Tweak>): TweakChildFragment {
-            val bundle = Bundle()
-            bundle.putString(keyCollection, collection)
-            bundle.putSerializable(keyTweaks, tweaks)
-            val fragment = TweakChildFragment()
-            fragment.arguments = bundle
-            return fragment
-        }
+        fun newInstance(collection: String, tweaks: ArrayList<Tweak>) =
+            TweakChildFragment().apply {
+                arguments = Bundle().apply {
+                    putString(KEY_COLLECTIONS, collection)
+                    putSerializable(KEY_TWEAKS, tweaks)
+                }
+            }
 
     }
 
@@ -37,8 +40,8 @@ class TweakChildFragment : BaseFragment(), Preference.OnPreferenceChangeListener
         val context = preferenceManager.context
         val screen = preferenceManager.createPreferenceScreen(context)
 
-        tweaks = arguments?.getSerializable(keyTweaks) as ArrayList<Tweak>
-        collection = arguments?.getString(keyCollection)!!
+        tweaks = arguments?.getSerializable(KEY_TWEAKS) as ArrayList<Tweak>
+        collection = arguments?.getString(KEY_COLLECTIONS)!!
 
         for (each in tweaks) {
             categorys.add(each.category)
@@ -64,7 +67,7 @@ class TweakChildFragment : BaseFragment(), Preference.OnPreferenceChangeListener
                         TweakViewDataType.integer,
                         TweakViewDataType.double,
                         TweakViewDataType.cgFloat -> {
-                            val seekBarPreference = SeekBarPreference(context)
+                            val seekBarPreference = TweakSeekbarPrefence(context)
                             seekBarPreference.title = t.title
                             seekBarPreference.max = t.maxIntValue
                             seekBarPreference.min = t.minIntValue
@@ -97,7 +100,7 @@ class TweakChildFragment : BaseFragment(), Preference.OnPreferenceChangeListener
                             throw IllegalArgumentException(TweakConstant.EXCEPTION_ILLEGAL_ARGUMENT)
                         }
                     }
-                    var putValue by TweakSharepreference(key, default)
+                    var putValue by TweakSharePreference(key, default)
                     putValue = newValue!!
                 }
             }
@@ -106,6 +109,4 @@ class TweakChildFragment : BaseFragment(), Preference.OnPreferenceChangeListener
 
         return true
     }
-
-
 }

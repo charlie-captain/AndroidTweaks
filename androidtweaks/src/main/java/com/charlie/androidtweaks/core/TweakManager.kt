@@ -1,8 +1,10 @@
-package com.charlie.androidtweaks
+package com.charlie.androidtweaks.core
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.charlie.androidtweaks.data.Tweak
+import com.charlie.androidtweaks.ui.TweakActivity
 import java.lang.ref.WeakReference
 
 object TweakManager {
@@ -32,7 +34,10 @@ object TweakManager {
         weakReference.get().let {
             val intent = Intent(it, TweakActivity::class.java)
             var bundle = Bundle()
-            bundle.putSerializable(key, tweaks)
+            bundle.putSerializable(
+                key,
+                tweaks
+            )
             intent.putExtras(bundle)
             it?.startActivity(intent)
         }

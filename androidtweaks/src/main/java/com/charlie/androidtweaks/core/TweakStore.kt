@@ -1,4 +1,8 @@
-package com.charlie.androidtweaks
+package com.charlie.androidtweaks.core
+
+import com.charlie.androidtweaks.data.Tweak
+import com.charlie.androidtweaks.data.TweakViewDataType
+import com.charlie.androidtweaks.utils.TweakSharePreference
 
 class TweakStore {
 
@@ -32,7 +36,7 @@ class TweakStore {
                 throw IllegalArgumentException("androidTweaks unable to deal with this type.")
             }
         }
-        val spTweak by TweakSharepreference(key, value)
+        val spTweak by TweakSharePreference(key, value)
 
         return spTweak
     }
