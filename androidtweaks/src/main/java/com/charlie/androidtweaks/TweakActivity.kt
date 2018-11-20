@@ -1,10 +1,12 @@
 package com.charlie.androidtweaks
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import kotlinx.android.synthetic.main.include_toolbar.*
+import kotlinx.android.synthetic.main.tweaks_toolbar.*
 
 class TweakActivity : AppCompatActivity() {
 
@@ -41,7 +43,20 @@ class TweakActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_tweaks_toolbar, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.menu_toolbar_tweak_dissmiss) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        TweakManager.clear()
     }
 }

@@ -39,8 +39,7 @@ object TweakManager {
     }
 
     fun clear() {
-        weakReference.clear()
-        tweaks.clear()
+//        tweaks.clear()
     }
 
 }

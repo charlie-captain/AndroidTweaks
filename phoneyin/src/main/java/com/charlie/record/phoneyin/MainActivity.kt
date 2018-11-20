@@ -12,9 +12,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : BaseActivity() {
 
     override fun init() {
-        ExampleTweakLibrary.add(Tweak("UI", "button", "width", TweakViewDataType.integer, btn.width, 0, 500))
+        val screenWidth = resources.displayMetrics.widthPixels
+        //动态添加
+        ExampleTweakLibrary.add(Tweak("UI", "button", "width", TweakViewDataType.integer, btn.width, 0, screenWidth))
 
         TweakManager.with(this).addAll(ExampleTweakLibrary.tweakStore.tweaks)
+
         btn.setOnClickListener {
             TweakManager.start()
         }

@@ -10,7 +10,9 @@ class TweakSharepreference<T>(val name: String, val default: T) {
     private val spName = "sp_tweak_file"
 
     val sharedPreferences: SharedPreferences by lazy {
-        TweakManager.weakReference.get()!!.getSharedPreferences(spName, Context.MODE_PRIVATE)
+        TweakManager.weakReference.get().let {
+            it?.getSharedPreferences(spName, Context.MODE_PRIVATE)!!
+        }
     }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T = getTweakValue(name, default)
