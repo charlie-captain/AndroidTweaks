@@ -1,12 +1,13 @@
 # AndroidTweaks
 Tweak your Android app without compiling
 
+[中文文档](https://github.com/charlie-captain/AndroidTweaks/blob/master/Android%20Tweaks%20CN.md)
 
 ## How to use
 
 >It's temporarily unstable, so I won't upload to the bintray
 
-- **Extends TweakLibrary**
+- **object Extends TweakLibrary**
     ```
     object ExampleTweakLibrary : TweakLibrary() {
 
@@ -61,25 +62,27 @@ Tweak your Android app without compiling
     ```
 - **bind view**
     ```
+    //bind a tweak
     ExampleTweakLibrary.bind(ExampleTweakLibrary.switchButton1) {
             btn_example.visibility = if (it as Boolean) View.VISIBLE else View.INVISIBLE
             Log.d("visibility", it.toString())
         }
 
-        val buttonTweaks = arrayListOf<Tweak>(
-            ExampleTweakLibrary.getTweakFromKey("UI_button_width")!!,
-            ExampleTweakLibrary.getTweakFromKey("UI_button_height")!!
-        )
-        //a view bind multiple tweaks
-        ExampleTweakLibrary.bindMultiple(buttonTweaks) {
-            val width = ExampleTweakLibrary.getTweakValue("UI_button_width")
-            val height = ExampleTweakLibrary.getTweakValue("UI_button_height")
+    //a view bind multiple tweaks
+    val buttonTweaks = arrayListOf<Tweak>(
+        ExampleTweakLibrary.getTweakFromKey("UI_button_width")!!,
+        ExampleTweakLibrary.getTweakFromKey("UI_button_height")!!
+    )
 
-            val layout = btn_example.layoutParams
-            layout.width = width as Int
-            layout.height = height as Int
-            btn_example.layoutParams = layout
-        }
+    ExampleTweakLibrary.bindMultiple(buttonTweaks) {
+        val width = ExampleTweakLibrary.getTweakValue("UI_button_width")
+        val height = ExampleTweakLibrary.getTweakValue("UI_button_height")
+
+        val layout = btn_example.layoutParams
+        layout.width = width as Int
+        layout.height = height as Int
+        btn_example.layoutParams = layout
+    }
     ```
 - **start Tweak**
     ```
