@@ -1,1 +1,1 @@
-include ':phoneyin', ':androidtweaks', ':androidtweaks_support'
+include ':app', ':androidtweaks_androidx', ':androidtweaks_support'
