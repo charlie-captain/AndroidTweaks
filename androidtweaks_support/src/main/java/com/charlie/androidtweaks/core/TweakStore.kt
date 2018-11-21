@@ -38,7 +38,8 @@ class TweakStore {
         val key = createTweakKey(tweak)
         val value = when (tweak.type) {
             TweakViewDataType.boolean -> tweak.defaultBoolValue
-            TweakViewDataType.integer -> tweak.defaultIntValue
+            TweakViewDataType.integer, TweakViewDataType.intergerEdit -> tweak.defaultIntValue
+            TweakViewDataType.string -> tweak.defaultStringValue
             else -> {
                 throw IllegalArgumentException(EXCEPTION_ILLEGAL_ARGUMENT)
             }
@@ -67,7 +68,8 @@ class TweakStore {
             val key = createTweakKey(tweak)
             val value = when (tweak.type) {
                 TweakViewDataType.boolean -> tweak.defaultBoolValue
-                TweakViewDataType.integer -> tweak.defaultIntValue
+                TweakViewDataType.integer, TweakViewDataType.intergerEdit -> tweak.defaultIntValue
+                TweakViewDataType.string -> tweak.defaultStringValue
                 else -> {
                     throw IllegalArgumentException(EXCEPTION_ILLEGAL_ARGUMENT)
                 }

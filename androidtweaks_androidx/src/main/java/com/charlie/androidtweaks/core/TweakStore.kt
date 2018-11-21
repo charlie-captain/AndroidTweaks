@@ -16,6 +16,9 @@ class TweakStore {
             return
         }
 
+        if (TweakManager.weakReference?.get() == null) {
+            return
+        }
         func(currentValueforTweak(tweak))
 
     }
@@ -25,6 +28,9 @@ class TweakStore {
     }
 
     fun bindMultiple(tweaks: ArrayList<Tweak>, func: () -> Any?) {
+        if (TweakManager.weakReference?.get() == null) {
+            return
+        }
         func()
     }
 

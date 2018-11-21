@@ -26,30 +26,11 @@ import java.io.Serializable
 //
 //}
 
-enum class TweakViewDataType :Serializable{
+enum class TweakViewDataType : Serializable {
     boolean,
     integer,
-//    cgFloat,
-//    double,
-//    uiColor,
-//    string,
-//    stringList,
-//    action,
-//    default
+    string,
+    intergerEdit
 }
 
-//class TBool : TweakType() {
-//    override var tweakViewDataType: TweakViewDataType = TweakViewDataType.boolean
-//}
-//
-//class TInt : TweakType() {
-//    override var tweakViewDataType: TweakViewDataType = TweakViewDataType.integer
-//}
-//
-//class TFloat : TweakType() {
-//
-//    override var tweakViewDataType: TweakViewDataType = TweakViewDataType.cgFloat
-//}
-//
-//
 

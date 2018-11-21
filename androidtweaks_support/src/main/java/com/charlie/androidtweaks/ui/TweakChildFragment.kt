@@ -1,14 +1,17 @@
 package com.charlie.androidtweaks.ui
 
 import android.os.Bundle
+import android.support.v7.preference.EditTextPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceCategory
 import android.support.v7.preference.SwitchPreferenceCompat
+import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.data.EXCEPTION_ILLEGAL_ARGUMENT
 import com.charlie.androidtweaks.data.Tweak
 import com.charlie.androidtweaks.data.TweakViewDataType
 import com.charlie.androidtweaks.utils.TweakSharePreferenceUtil
 import com.charlie.androidtweaks.view.TweakSeekbarPrefence
+import kotlinx.android.synthetic.main.tweaks_dialog_int.*
 
 private const val KEY_COLLECTIONS = "collection"
 private const val KEY_TWEAKS = "child_tweaks"
@@ -24,12 +27,12 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
     companion object {
 
         fun newInstance(collection: String, tweaks: ArrayList<Tweak>) =
-                TweakChildFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(KEY_COLLECTIONS, collection)
-                        putSerializable(KEY_TWEAKS, tweaks)
-                    }
+            TweakChildFragment().apply {
+                arguments = Bundle().apply {
+                    putString(KEY_COLLECTIONS, collection)
+                    putSerializable(KEY_TWEAKS, tweaks)
                 }
+            }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -48,14 +51,13 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
             category.title = c
             screen.addPreference(category)
             for (t in tweaks) {
-                var key = ""
+                var key = "${t.collection}_${t.category}_${t.title}"
                 if (t.category.equals(c)) {
                     when (t.type) {
                         TweakViewDataType.boolean -> {
                             val switchPreference = SwitchPreferenceCompat(context)
                             switchPreference.isPersistent = false
                             switchPreference.title = t.title
-                            key = "${t.collection}_${t.category}_${t.title}"
                             switchPreference.key = key
                             val value by TweakSharePreferenceUtil(key, t.defaultBoolValue)
                             switchPreference.isChecked = value
@@ -68,12 +70,36 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
                             seekBarPreference.title = t.title
                             seekBarPreference.max = t.maxIntValue
                             seekBarPreference.min = t.minIntValue
-                            key = "${t.collection}_${t.category}_${t.title}"
                             seekBarPreference.key = key
                             val value by TweakSharePreferenceUtil(key, t.defaultIntValue)
                             seekBarPreference.setValue(value)
                             seekBarPreference.onPreferenceChangeListener = this
                             category.addPreference(seekBarPreference)
+                        }
+                        TweakViewDataType.string -> {
+                            val editTextPreference = EditTextPreference(context)
+                            editTextPreference.isPersistent = false
+                            editTextPreference.title = t.title
+                            editTextPreference.key = key
+                            val value by TweakSharePreferenceUtil(key, t.defaultStringValue)
+                            editTextPreference.text = value
+                            editTextPreference.summary = value
+                            editTextPreference.dialogTitle = "putString"
+                            editTextPreference.onPreferenceChangeListener = this
+                            category.addPreference(editTextPreference)
+                        }
+                        TweakViewDataType.intergerEdit -> {
+                            val editTextPreference = EditTextPreference(context)
+                            editTextPreference.isPersistent = false
+                            editTextPreference.title = t.title
+                            editTextPreference.key = key
+                            val value by TweakSharePreferenceUtil(key, t.defaultIntValue)
+                            editTextPreference.dialogLayoutResource = R.layout.tweaks_dialog_int
+                            tweaks_dialog_title.text = "putInt"
+                            tweaks_dialog_edittext.setText(value)
+                            editTextPreference.summary = value.toString()
+                            editTextPreference.onPreferenceChangeListener = this
+                            category.addPreference(editTextPreference)
                         }
                         else -> {
 
@@ -96,7 +122,8 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
                 tweakMap[key]?.let {
                     val default = when (it.type) {
                         TweakViewDataType.boolean -> it.defaultBoolValue
-                        TweakViewDataType.integer -> it.defaultIntValue
+                        TweakViewDataType.integer, TweakViewDataType.intergerEdit -> it.defaultIntValue
+                        TweakViewDataType.string -> it.defaultStringValue
                         else -> {
                             throw IllegalArgumentException(EXCEPTION_ILLEGAL_ARGUMENT)
                         }

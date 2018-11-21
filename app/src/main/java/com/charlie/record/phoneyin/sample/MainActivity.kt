@@ -9,8 +9,6 @@ import com.charlie.androidtweaks.data.Tweak
 import com.charlie.androidtweaks.data.TweakViewDataType
 import com.charlie.record.phoneyin.BaseActivity
 import com.charlie.record.phoneyin.R
-import com.charlie.record.phoneyin.R.id.btn
-import com.charlie.record.phoneyin.R.id.btn_example
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
@@ -68,11 +66,13 @@ class MainActivity : BaseActivity() {
         }
 
         val buttonTweaks = arrayListOf<Tweak>(
+            //create tweaks from keys
             ExampleTweakLibrary.getTweakFromKey("UI_button_width")!!,
             ExampleTweakLibrary.getTweakFromKey("UI_button_height")!!
         )
 
         ExampleTweakLibrary.bindMultiple(buttonTweaks) {
+            //use the tweak key to get value
             val width = ExampleTweakLibrary.getTweakValue("UI_button_width")
             val height = ExampleTweakLibrary.getTweakValue("UI_button_height")
 
@@ -80,6 +80,14 @@ class MainActivity : BaseActivity() {
             layout.width = width as Int
             layout.height = height as Int
             btn_example.layoutParams = layout
+        }
+
+        ExampleTweakLibrary.bind(ExampleTweakLibrary.stringtext) {
+            text.text = it as String
+        }
+
+        ExampleTweakLibrary.bind(ExampleTweakLibrary.inttext) {
+            intText.text = it?.toString()
         }
     }
 }

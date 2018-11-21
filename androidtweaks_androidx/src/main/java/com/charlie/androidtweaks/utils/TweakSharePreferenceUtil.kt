@@ -12,7 +12,7 @@ class TweakSharePreferenceUtil<T>(val name: String, val default: T) {
     private val spName = "sp_tweak_file"
 
     val sharedPreferences: SharedPreferences? by lazy {
-        TweakManager.weakReference.get().let {
+        TweakManager.weakReference?.get().let {
             it?.getSharedPreferences(spName, Context.MODE_PRIVATE)
         }
     }
@@ -41,7 +41,6 @@ class TweakSharePreferenceUtil<T>(val name: String, val default: T) {
             is Boolean -> this?.getBoolean(key, default) as Any
             is Float -> this?.getFloat(key, default) as Any
             is String -> this?.getString(key, default) as Any
-
             else -> {
                 throw IllegalArgumentException("SharePreference can't get this value.")
             }

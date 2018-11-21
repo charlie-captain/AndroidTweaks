@@ -37,7 +37,7 @@ object TweakManager {
     }
 
     fun start() {
-        weakReference?.get().let {
+        weakReference?.get()?.let {
             val intent = Intent(it, TweakActivity::class.java)
             var bundle = Bundle()
             bundle.putSerializable(
@@ -45,7 +45,7 @@ object TweakManager {
                 library.getTweaks()
             )
             intent.putExtras(bundle)
-            it?.startActivity(intent)
+            it.startActivity(intent)
         }
     }
 

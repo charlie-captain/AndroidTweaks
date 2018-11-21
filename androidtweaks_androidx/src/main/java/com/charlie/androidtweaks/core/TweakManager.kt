@@ -10,7 +10,7 @@ object TweakManager {
 
     private lateinit var library: TweakLibrary
 
-    lateinit var weakReference: WeakReference<Context>
+    var weakReference: WeakReference<Context>? = null
 
     val key = "key_tweak"
 
@@ -20,8 +20,9 @@ object TweakManager {
     }
 
 
-    fun initLibrary(library: TweakLibrary) {
+    fun initLibrary(library: TweakLibrary) :TweakManager {
         this.library = library
+        return this
     }
 
     fun reset() {
@@ -36,7 +37,7 @@ object TweakManager {
     }
 
     fun start() {
-        weakReference.get().let {
+        weakReference?.get()?.let {
             val intent = Intent(it, TweakActivity::class.java)
             var bundle = Bundle()
             bundle.putSerializable(
@@ -44,7 +45,7 @@ object TweakManager {
                 library.getTweaks()
             )
             intent.putExtras(bundle)
-            it?.startActivity(intent)
+            it.startActivity(intent)
         }
     }
 

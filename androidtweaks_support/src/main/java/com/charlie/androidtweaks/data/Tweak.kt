@@ -25,6 +25,9 @@ data class Tweak(
 
     var intValue: Int
 
+    var defaultStringValue: String
+    var stringValue: String
+
     init {
         defaultBoolValue = false
         maxIntValue = 0
@@ -32,6 +35,8 @@ data class Tweak(
         defaultIntValue = 0
         boolValue = defaultBoolValue
         intValue = defaultIntValue
+        defaultStringValue = ""
+        stringValue = ""
     }
 
     constructor(
@@ -50,6 +55,26 @@ data class Tweak(
         minIntValue = minValue
     }
 
+    constructor(
+        topic: String,
+        category: String,
+        title: String,
+        type: TweakViewDataType,
+        defaultStringValue: String
+    ) : this(topic, category, title, type) {
+        this.defaultStringValue = defaultStringValue
+    }
+
+    //TweakDataViewType.integerEdit
+    constructor(
+        topic: String,
+        category: String,
+        title: String,
+        type: TweakViewDataType,
+        defaultIntValue: Int
+    ) : this(topic, category, title, type) {
+        this.defaultIntValue = defaultIntValue
+    }
 
     override fun equals(other: Any?): Boolean {
         return super.equals(other)
@@ -62,5 +87,6 @@ data class Tweak(
     fun reset() {
         boolValue = defaultBoolValue
         intValue = defaultIntValue
+        stringValue = defaultStringValue
     }
 }
