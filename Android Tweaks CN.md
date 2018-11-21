@@ -5,6 +5,13 @@
 
 >因为他还不够稳定，所以我没有上传到bintray
 
+
+- **App**
+
+    ```
+    TweakManager.with(this)
+    ```
+
 - **object 继承 TweakLibrary**
 
     此处定义静态的Tweaks，现在支持两种类型，int和bool
@@ -17,8 +24,8 @@
         val switchButton3 = Tweak("Test", "category2", "button", TweakViewDataType.boolean, false)
         val switchButton4 = Tweak("Test", "category3", "button", TweakViewDataType.boolean, true)
         val switchButton5 = Tweak("Test", "category4", "button", TweakViewDataType.boolean, false)
-    
-    
+
+
         override val tweakStore = TweakStore().listOf(
             switchButton1,
             switchButton2,
@@ -28,9 +35,9 @@
         )
     }
     ```
-    
+
     动态定义Tweak，主要是为了方便设置一个默认值
-    
+
     ```
         val screenWidth = resources.displayMetrics.widthPixels
         val screenHeight = resources.displayMetrics.heightPixels
@@ -86,11 +93,8 @@
     ```
 - **启动Tweak程序**
     ```
-    
-    TweakManager.with(this).initLibrary(ExampleTweakLibrary)
-
     btn.setOnClickListener {
-        TweakManager.start()
+        TweakManager..initLibrary(ExampleTweakLibrary).start()
     }
     ```
 

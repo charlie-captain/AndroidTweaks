@@ -1,13 +1,16 @@
-package com.charlie.record.phoneyin
+package com.charlie.record.phoneyin.sample
 
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import android.util.Log
 import android.view.View
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.Tweak
 import com.charlie.androidtweaks.data.TweakViewDataType
-import com.charlie.record.phoneyin.sample.ExampleTweakLibrary
+import com.charlie.record.phoneyin.BaseActivity
+import com.charlie.record.phoneyin.R
+import com.charlie.record.phoneyin.R.id.btn
+import com.charlie.record.phoneyin.R.id.btn_example
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
@@ -41,11 +44,8 @@ class MainActivity : BaseActivity() {
             )
         )
 
-
-        TweakManager.with(this).initLibrary(ExampleTweakLibrary)
-
         btn.setOnClickListener {
-            TweakManager.start()
+            TweakManager.initLibrary(ExampleTweakLibrary).start()
         }
     }
 

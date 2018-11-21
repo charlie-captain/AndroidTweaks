@@ -1,8 +1,7 @@
 package com.charlie.record.phoneyin
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.appcompat.app.AppCompatActivity
+import android.support.v7.app.AppCompatActivity
 
 abstract class BaseActivity : AppCompatActivity(){
 

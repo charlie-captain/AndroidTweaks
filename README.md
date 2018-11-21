@@ -7,6 +7,12 @@ Tweak your Android app without compiling
 
 >It's temporarily unstable, so I won't upload to the bintray
 
+- **App**
+
+    ```
+    TweakManager.with(this)
+    ```
+
 - **object Extends TweakLibrary**
     ```
     object ExampleTweakLibrary : TweakLibrary() {
@@ -86,11 +92,9 @@ Tweak your Android app without compiling
     ```
 - **start Tweak**
     ```
-    TweakManager.with(this).initLibrary(ExampleTweakLibrary)
-
-        btn.setOnClickListener {
-            TweakManager.start()
-        }
+    btn.setOnClickListener {
+        TweakManager..initLibrary(ExampleTweakLibrary).start()
+    }
     ```
 
 ## Issue or Pull requests

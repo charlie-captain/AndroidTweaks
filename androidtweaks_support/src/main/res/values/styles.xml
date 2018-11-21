@@ -1,0 +1,12 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="TweakAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/tweaks_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/tweaks_colorPrimaryDark</item>
+        <item name="colorAccent">@color/tweaks_colorAccent</item>
+    </style>
+
+
+</resources>
