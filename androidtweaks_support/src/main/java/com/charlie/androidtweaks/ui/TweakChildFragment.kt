@@ -5,13 +5,8 @@ import android.support.v7.preference.EditTextPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceCategory
 import android.support.v7.preference.SwitchPreferenceCompat
-import com.charlie.androidtweaks.R
-import com.charlie.androidtweaks.data.EXCEPTION_ILLEGAL_ARGUMENT
-import com.charlie.androidtweaks.data.Tweak
-import com.charlie.androidtweaks.data.TweakViewDataType
-import com.charlie.androidtweaks.utils.TweakSharePreferenceUtil
+import com.charlie.androidtweaks.data.*
 import com.charlie.androidtweaks.view.TweakSeekbarPrefence
-import kotlinx.android.synthetic.main.tweaks_dialog_int.*
 
 private const val KEY_COLLECTIONS = "collection"
 private const val KEY_TWEAKS = "child_tweaks"
@@ -51,61 +46,44 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
             category.title = c
             screen.addPreference(category)
             for (t in tweaks) {
-                var key = "${t.collection}_${t.category}_${t.title}"
-                if (t.category.equals(c)) {
+                if (t.category == c) {
                     when (t.type) {
-                        TweakViewDataType.boolean -> {
+                        is TweakBool -> {
                             val switchPreference = SwitchPreferenceCompat(context)
                             switchPreference.isPersistent = false
                             switchPreference.title = t.title
-                            switchPreference.key = key
-                            val value by TweakSharePreferenceUtil(key, t.defaultBoolValue)
-                            switchPreference.isChecked = value
+                            switchPreference.key = t.toString()
+                            switchPreference.isChecked = t.value as Boolean
                             switchPreference.onPreferenceChangeListener = this
                             category.addPreference(switchPreference)
                         }
-                        TweakViewDataType.integer -> {
+                        is TweakInt -> {
                             val seekBarPreference = TweakSeekbarPrefence(context)
                             seekBarPreference.isPersistent = false
                             seekBarPreference.title = t.title
-                            seekBarPreference.max = t.maxIntValue
-                            seekBarPreference.min = t.minIntValue
-                            seekBarPreference.key = key
-                            val value by TweakSharePreferenceUtil(key, t.defaultIntValue)
-                            seekBarPreference.setValue(value)
+                            seekBarPreference.max = t.type.max
+                            seekBarPreference.min = t.type.min
+                            seekBarPreference.key = t.toString()
+                            seekBarPreference.setValue(t.value as Int)
                             seekBarPreference.onPreferenceChangeListener = this
                             category.addPreference(seekBarPreference)
                         }
-                        TweakViewDataType.string -> {
+                        is TweakString -> {
                             val editTextPreference = EditTextPreference(context)
                             editTextPreference.isPersistent = false
                             editTextPreference.title = t.title
-                            editTextPreference.key = key
-                            val value by TweakSharePreferenceUtil(key, t.defaultStringValue)
-                            editTextPreference.text = value
-                            editTextPreference.summary = value
-                            editTextPreference.dialogTitle = "putString"
-                            editTextPreference.onPreferenceChangeListener = this
-                            category.addPreference(editTextPreference)
-                        }
-                        TweakViewDataType.intergerEdit -> {
-                            val editTextPreference = EditTextPreference(context)
-                            editTextPreference.isPersistent = false
-                            editTextPreference.title = t.title
-                            editTextPreference.key = key
-                            val value by TweakSharePreferenceUtil(key, t.defaultIntValue)
-                            editTextPreference.dialogLayoutResource = R.layout.tweaks_dialog_int
-                            tweaks_dialog_title.text = "putInt"
-                            tweaks_dialog_edittext.setText(value)
-                            editTextPreference.summary = value.toString()
+                            editTextPreference.dialogTitle = t.title
+                            editTextPreference.text = t.value as? String
+                            editTextPreference.summary = t.value as? String
+                            editTextPreference.key = t.toString()
                             editTextPreference.onPreferenceChangeListener = this
                             category.addPreference(editTextPreference)
                         }
                         else -> {
-
+                            throw IllegalArgumentException(EXCEPTION_ILLEGAL_ARGUMENT)
                         }
                     }
-                    tweakMap.put(key, t)
+                    tweakMap[t.toString()] = t
                 }
             }
         }
@@ -116,25 +94,18 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
      * SaveTweaks
      */
     override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
-        val key = preference!!.key
+        val key = preference?.key
         tweakMap.containsKey(key).let {
             if (it) {
                 tweakMap[key]?.let {
-                    val default = when (it.type) {
-                        TweakViewDataType.boolean -> it.defaultBoolValue
-                        TweakViewDataType.integer, TweakViewDataType.intergerEdit -> it.defaultIntValue
-                        TweakViewDataType.string -> it.defaultStringValue
-                        else -> {
-                            throw IllegalArgumentException(EXCEPTION_ILLEGAL_ARGUMENT)
-                        }
-                    }
-                    var putValue by TweakSharePreferenceUtil(key, default)
-                    putValue = newValue!!
+                    it.value = newValue!!
                 }
             }
         }
-
-
+        if (preference is EditTextPreference) {
+            //update value
+            preference.summary = newValue?.toString()
+        }
         return true
     }
 }

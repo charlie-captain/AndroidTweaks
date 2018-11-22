@@ -12,8 +12,8 @@ class TweakSharePreferenceUtil<T>(val name: String, val default: T) {
     private val spName = "sp_tweak_file"
 
     val sharedPreferences: SharedPreferences? by lazy {
-        TweakManager.weakReference?.get().let {
-            it?.getSharedPreferences(spName, Context.MODE_PRIVATE)
+        TweakManager.weakReference?.let {
+            it.get()?.getSharedPreferences(spName, Context.MODE_PRIVATE)
         }
     }
 
@@ -36,16 +36,17 @@ class TweakSharePreferenceUtil<T>(val name: String, val default: T) {
     }?.apply()
 
     fun getTweakValue(key: String, default: T): T = with(sharedPreferences) {
-        val value: Any = when (default) {
-            is Int -> this?.getInt(key, default) as Any
-            is Boolean -> this?.getBoolean(key, default) as Any
-            is Float -> this?.getFloat(key, default) as Any
-            is String -> this?.getString(key, default) as Any
+
+        val value: Any? = when (default) {
+            is Int -> this?.getInt(key, default)
+            is Boolean -> this?.getBoolean(key, default)
+            is Float -> this?.getFloat(key, default)
+            is String -> this?.getString(key, default)
             else -> {
                 throw IllegalArgumentException("SharePreference can't get this value.")
             }
         }
         Log.d(TAG_ANDROIDTWEAKS, "getValue $key   $value")
-        return value as T
+        return if (value == null) default else value as T
     }
 }

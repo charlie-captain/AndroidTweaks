@@ -16,17 +16,16 @@ class TweakFragment : TweakBaseFragment() {
     private var heads: HashSet<String> = HashSet()
     //tweaks of each head
     private var headsTweaks: HashMap<String, ArrayList<Tweak>> = HashMap()
-    private lateinit var categorys: ArrayList<String>
 
     companion object {
 
 
         fun newInstance(tweaks: ArrayList<Tweak>) =
-            TweakFragment().apply {
-                arguments = Bundle().apply {
-                    putSerializable(KEY_TWEAKS, tweaks)
+                TweakFragment().apply {
+                    arguments = Bundle().apply {
+                        putSerializable(KEY_TWEAKS, tweaks)
+                    }
                 }
-            }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -46,9 +45,9 @@ class TweakFragment : TweakBaseFragment() {
             preference.setOnPreferenceClickListener {
                 val fragment = TweakChildFragment.newInstance(i, headsTweaks.get(i) as ArrayList<Tweak>)
                 requireFragmentManager().beginTransaction()
-                    .replace(R.id.fl_tweak, fragment)
-                    .addToBackStack("tweak_child")
-                    .commit()
+                        .replace(R.id.fl_tweak, fragment)
+                        .addToBackStack("tweak_child")
+                        .commit()
                 false
             }
             screen.addPreference(preference)

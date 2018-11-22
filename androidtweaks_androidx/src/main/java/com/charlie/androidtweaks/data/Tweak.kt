@@ -1,5 +1,6 @@
 package com.charlie.androidtweaks.data
 
+import com.charlie.androidtweaks.utils.TweakSharePreferenceUtil
 import java.io.Serializable
 
 /**
@@ -7,60 +8,61 @@ import java.io.Serializable
  * :because parcelable is not supported
  */
 data class Tweak(
-    val collection: String,
-    val category: String,
-    val title: String,
-    val type: TweakViewDataType
+        val collection: String,
+        val category: String,
+        val title: String,
+        val type: TweakType
 ) : Serializable {
 
-    var defaultBoolValue: Boolean
 
-    var defaultIntValue: Int
+    var value: Any = type.getDefault()
+        set(value) {
+            var spValue by TweakSharePreferenceUtil(toString(), value)
+            spValue = value
+            field = spValue
+        }
+        get() {
+            return when (type) {
+                is TweakBool -> {
+                    val spValue by TweakSharePreferenceUtil(toString(), type.value)
+                    spValue
+                }
+                is TweakInt -> {
+                    val spValue by TweakSharePreferenceUtil(toString(), type.value)
+                    spValue
+                }
+                is TweakString->{
+                    val spValue by TweakSharePreferenceUtil(toString(),type.value)
+                    spValue
+                }
+                else -> {
+                    throw IllegalArgumentException(EXCEPTION_ILLEGAL_ARGUMENT)
+                }
+            }
+        }
 
-    var maxIntValue: Int
-
-    var minIntValue: Int
-
-    var boolValue: Boolean
-
-    var intValue: Int
-
-    init {
-        defaultBoolValue = false
-        maxIntValue = 0
-        minIntValue = 0
-        defaultIntValue = 0
-        boolValue = defaultBoolValue
-        intValue = defaultIntValue
-    }
-
-    constructor(
-        topic: String, category: String, title: String, type: TweakViewDataType, defaultValue: Boolean
-    ) : this(topic, category, title, type) {
-        defaultBoolValue = defaultValue
-    }
-
-    constructor(
-        topic: String, category: String, title: String, type: TweakViewDataType, defaultValue: Int,
-        minValue: Int,
-        maxValue: Int
-    ) : this(topic, category, title, type) {
-        defaultIntValue = defaultValue
-        maxIntValue = maxValue
-        minIntValue = minValue
-    }
-
-
-    override fun equals(other: Any?): Boolean {
-        return super.equals(other)
-    }
-
-    override fun hashCode(): Int {
-        return super.hashCode()
-    }
-
+    /**
+     * reset the value to default
+     */
     fun reset() {
-        boolValue = defaultBoolValue
-        intValue = defaultIntValue
+        value = when (type) {
+            is TweakBool -> {
+                type.defaultValue
+            }
+            is TweakInt -> {
+                type.defaultValue
+            }
+            is TweakString->{
+                type.defaultValue
+            }
+            else -> {
+                throw IllegalArgumentException(EXCEPTION_ILLEGAL_ARGUMENT)
+            }
+        }
+    }
+
+    override fun toString(): String {
+
+        return "${collection}_${category}_${title}"
     }
 }

@@ -12,7 +12,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
-import androidx.preference.R
+import com.charlie.androidtweaks.R
 
 class TweakSeekbarPrefence : Preference {
 

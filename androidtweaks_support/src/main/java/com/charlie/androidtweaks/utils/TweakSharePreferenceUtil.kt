@@ -11,7 +11,7 @@ class TweakSharePreferenceUtil<T>(val name: String, val default: T) {
 
     private val spName = "sp_tweak_file"
 
-    private val sharedPreferences: SharedPreferences? by lazy {
+    val sharedPreferences: SharedPreferences? by lazy {
         TweakManager.weakReference?.let {
             it.get()?.getSharedPreferences(spName, Context.MODE_PRIVATE)
         }

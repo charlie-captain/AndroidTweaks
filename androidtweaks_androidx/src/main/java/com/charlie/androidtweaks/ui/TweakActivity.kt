@@ -19,9 +19,9 @@ class TweakActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tweak)
-        setSupportActionBar(toolbar)
-        toolbar.title = "Android Tweaks"
-        toolbar.setNavigationOnClickListener {
+        setSupportActionBar(tweaks_toolbar)
+        tweaks_toolbar.title = "Android Tweaks"
+        tweaks_toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

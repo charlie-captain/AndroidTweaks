@@ -50,7 +50,6 @@ object TweakManager {
     }
 
     fun clear() {
-//        tweaks.clear()
     }
 
 }

@@ -6,7 +6,6 @@ import android.support.v7.preference.*
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.charlie.androidtweaks.R
 
 /**
  * fix left padding bug

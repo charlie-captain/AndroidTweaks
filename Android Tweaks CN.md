@@ -6,97 +6,77 @@
 >因为他还不够稳定，所以我没有上传到bintray
 
 
-- **App**
+### App
 
-    ```
-    TweakManager.with(this)
-    ```
+```
+TweakManager.with(this)
+```
 
-- **object 继承 TweakLibrary**
+### object 继承 TweakLibrary
 
-    此处定义静态的Tweaks，现在支持两种类型，int和bool
-    ```
-    object ExampleTweakLibrary : TweakLibrary() {
-
-        //static
-        val switchButton1 = Tweak("UI", "button", "visibility", TweakViewDataType.boolean, true)
-        val switchButton2 = Tweak("Test", "category1", "button", TweakViewDataType.boolean, true)
-        val switchButton3 = Tweak("Test", "category2", "button", TweakViewDataType.boolean, false)
-        val switchButton4 = Tweak("Test", "category3", "button", TweakViewDataType.boolean, true)
-        val switchButton5 = Tweak("Test", "category4", "button", TweakViewDataType.boolean, false)
+此处定义静态的Tweaks，现在支持两种类型，int和bool
+```
+object DebugLibrary : TweakLibrary() {
 
 
-        override val tweakStore = TweakStore().listOf(
-            switchButton1,
-            switchButton2,
-            switchButton3,
-            switchButton4,
-            switchButton5
-        )
-    }
-    ```
+    /*
+     * topic: 总分类
+     * category：tweak 的所在类别
+     * title：tweak 的名称
+     * type：现在只支持 TweakBool、 TweakInt、TweakString
+     *
+     */
 
-    动态定义Tweak，主要是为了方便设置一个默认值
+    val longPressToSavePOPIcon = Tweak("UI", "LongPress", "save POP icon", TweakBool(false))
 
-    ```
-        val screenWidth = resources.displayMetrics.widthPixels
-        val screenHeight = resources.displayMetrics.heightPixels
-        //动态添加,下面举个例子
-        ExampleTweakLibrary.add(
-            Tweak(
-                "UI",
-                "button",
-                "width",
-                TweakViewDataType.integer,
-                btn.width,
-                0,
-                screenWidth
-            )
-        )
-
-        //button高度
-        ExampleTweakLibrary.add(
-            Tweak(
-                "UI",
-                "button",
-                "height",
-                TweakViewDataType.integer,
-                btn.height,
-                0,
-                screenHeight
-            )
-        )
-    ```
-- **绑定View**
-    ```
-    绑定单个Tweak
-    ExampleTweakLibrary.bind(ExampleTweakLibrary.switchButton1) {
-            btn_example.visibility = if (it as Boolean) View.VISIBLE else View.INVISIBLE
-            Log.d("visibility", it.toString())
-        }
-
-    //绑定多个Tweaks
-    val buttonTweaks = arrayListOf<Tweak>(
-        ExampleTweakLibrary.getTweakFromKey("UI_button_width")!!,
-        ExampleTweakLibrary.getTweakFromKey("UI_button_height")!!
+    //这里必须加上上面定义的Tweaks, 比如: longPressToSavePOPIcon, xxxTweaks, ...
+    override val tweakStore = TweakStore().listOf(
+            longPressToSavePOPIcon
     )
-    //a view bind multiple tweaks
-    ExampleTweakLibrary.bindMultiple(buttonTweaks) {
-        val width = ExampleTweakLibrary.getTweakValue("UI_button_width")
-        val height = ExampleTweakLibrary.getTweakValue("UI_button_height")
 
-        val layout = btn_example.layoutParams
-        layout.width = width as Int
-        layout.height = height as Int
-        btn_example.layoutParams = layout
-    }
-    ```
-- **启动Tweak程序**
-    ```
-    btn.setOnClickListener {
-        TweakManager..initLibrary(ExampleTweakLibrary).start()
-    }
-    ```
+}
+```
+
+动态定义Tweak，主要是为了方便设置一个默认值
+
+```
+    val screenWidth = resources.displayMetrics.widthPixels
+    val screenHeight = resources.displayMetrics.heightPixels
+    //动态添加,下面举个例子
+    DebugLibrary.add(
+        Tweak(
+            "UI",
+            "button",
+            "width",
+            TweakInt(btn_width,0,screenWidth)
+        )
+    )
+
+    //button高度
+    DebugLibrary.add(
+        Tweak(
+            "UI",
+            "button",
+            "height",
+            TweakInt(btn_height,0,screenHeight)
+        )
+    )
+```
+
+### 获取值
+```
+//静态
+DebugLibrary.longPressToSavePOPIcon.value as (转换成你想要的类型，一般是不会为null)
+
+//动态添加的tweaks
+DebugLibrary.value(key)
+```
+### 启动Tweak程序
+```
+btn.setOnClickListener {
+    TweakManager..initLibrary(DebugLibrary).start()
+}
+```
 
 ## Issue or Pull requests
 欢迎大家一起和我来完善这个库
