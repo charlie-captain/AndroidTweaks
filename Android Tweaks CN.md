@@ -27,11 +27,11 @@ object DebugLibrary : TweakLibrary() {
      *
      */
 
-    val longPressToSavePOPIcon = Tweak("UI", "LongPress", "save POP icon", TweakBool(false))
+    val longPressToSaveIcon = Tweak("UI", "LongPress", "save icon", TweakBool(false))
 
-    //这里必须加上上面定义的Tweaks, 比如: longPressToSavePOPIcon, xxxTweaks, ...
+    //这里必须加上上面定义的Tweaks, 比如: longPressToSaveIcon, xxxTweaks, ...
     override val tweakStore = TweakStore().listOf(
-            longPressToSavePOPIcon
+            longPressToSaveIcon
     )
 
 }
@@ -66,7 +66,7 @@ object DebugLibrary : TweakLibrary() {
 ### 获取值
 ```
 //静态
-DebugLibrary.longPressToSavePOPIcon.value as (转换成你想要的类型，一般是不会为null)
+DebugLibrary.longPressToSaveIcon.value as (转换成你想要的类型，一般是不会为null)
 
 //动态添加的tweaks
 DebugLibrary.value(key)
@@ -74,7 +74,7 @@ DebugLibrary.value(key)
 ### 启动Tweak程序
 ```
 btn.setOnClickListener {
-    TweakManager..initLibrary(DebugLibrary).start()
+    TweakManager.initLibrary(DebugLibrary).start()
 }
 ```
 

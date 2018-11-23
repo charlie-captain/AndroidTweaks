@@ -13,37 +13,38 @@ Tweak your Android app without compiling
 TweakManager.with(this)
 ```
 
-### object 继承 TweakLibrary
+### object : TweakLibrary
 
-此处定义静态的Tweaks，现在支持两种类型，int和bool
+static tweaks
 ```
 object DebugLibrary : TweakLibrary() {
 
 
     /*
-     * topic: 总分类
-     * category：tweak 的所在类别
-     * title：tweak 的名称
-     * type：现在只支持 TweakBool、 TweakInt、TweakString
+     * topic: String
+     * category：String
+     * title: String
+     * type：support TweakBool、 TweakInt、TweakString
      *
      */
 
-    val longPressToSavePOPIcon = Tweak("UI", "LongPress", "save POP icon", TweakBool(false))
+    val longPressToSaveIcon = Tweak("UI", "LongPress", "save icon", TweakBool(false))
 
-    //这里必须加上上面定义的Tweaks, 比如: longPressToSavePOPIcon, xxxTweaks, ...
+    //there should add the tweaks into the list, like : longPressToSavePOPIcon, xxxTweaks, ...
     override val tweakStore = TweakStore().listOf(
-            longPressToSavePOPIcon
+            longPressToSaveIcon
     )
 
 }
 ```
 
-动态定义Tweak，主要是为了方便设置一个默认值
+dynamic tweaks
 
 ```
     val screenWidth = resources.displayMetrics.widthPixels
     val screenHeight = resources.displayMetrics.heightPixels
-    //动态添加,下面举个例子
+
+    //example
     DebugLibrary.add(
         Tweak(
             "UI",
@@ -53,7 +54,7 @@ object DebugLibrary : TweakLibrary() {
         )
     )
 
-    //button高度
+    //button_height
     DebugLibrary.add(
         Tweak(
             "UI",
@@ -64,18 +65,18 @@ object DebugLibrary : TweakLibrary() {
     )
 ```
 
-### 获取值
+### getValue
 ```
-//静态
-DebugLibrary.longPressToSavePOPIcon.value as (转换成你想要的类型，一般是不会为null)
+//static
+DebugLibrary.longPressToSaveIcon.value as <the type you want>
 
-//动态添加的tweaks
+//get dynamic tweaks
 DebugLibrary.value(key)
 ```
-### 启动Tweak程序
+### start TweakConfig
 ```
 btn.setOnClickListener {
-    TweakManager..initLibrary(DebugLibrary).start()
+    TweakManager.initLibrary(DebugLibrary).start()
 }
 ```
 
