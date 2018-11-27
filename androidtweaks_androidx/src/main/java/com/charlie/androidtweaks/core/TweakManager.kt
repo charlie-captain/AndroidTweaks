@@ -8,11 +8,11 @@ import java.lang.ref.WeakReference
 
 object TweakManager {
 
-    private lateinit var library: TweakLibrary
+    private var library: TweakLibrary? = null
 
     var weakReference: WeakReference<Context>? = null
 
-    val key = "key_tweak"
+    const val key = "key_tweak"
 
     fun with(context: Context): TweakManager {
         weakReference = WeakReference(context)
@@ -20,36 +20,31 @@ object TweakManager {
     }
 
 
-    fun initLibrary(library: TweakLibrary) :TweakManager {
+    fun initLibrary(library: TweakLibrary): TweakManager {
         this.library = library
         return this
     }
 
     fun reset() {
-        library.reset()
+        library?.reset()
     }
 
-    /**
-     * when application was killed that the ps.clear
-     */
-    fun applyPersistent(isPersistent: Boolean) {
-
-    }
 
     fun start() {
         weakReference?.get()?.let {
+            if (library == null) {
+                throw NullPointerException("tweak library can't be null")
+            }
             val intent = Intent(it, TweakActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             var bundle = Bundle()
             bundle.putSerializable(
                 key,
-                library.getTweaks()
+                library?.getTweaks()
             )
             intent.putExtras(bundle)
             it.startActivity(intent)
         }
-    }
-
-    fun clear() {
     }
 
 }
