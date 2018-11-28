@@ -14,11 +14,21 @@ object TweakManager {
 
     const val key = "key_tweak"
 
+    var isPersistent = true
+
     fun with(context: Context): TweakManager {
         weakReference = WeakReference(context)
         return this
     }
 
+    /**
+     * when the app destroy , isPersistent to save the key-value
+     */
+    fun destroy() {
+        if (!isPersistent) {
+            reset()
+        }
+    }
 
     fun initLibrary(library: TweakLibrary): TweakManager {
         this.library = library
