@@ -1,14 +1,18 @@
 package com.charlie.androidtweaks.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.Tweak
+import com.charlie.androidtweaks.utils.TweakPermissionUtil
+import com.charlie.androidtweaks.window.TweakWindowService
 import kotlinx.android.synthetic.main.tweaks_toolbar.*
 private const val TITLE_TOOLBAR = "Tweaks"
 
@@ -58,12 +62,40 @@ class TweakActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.menu_toolbar_tweak_dissmiss -> finish()
+            R.id.menu_toolbar_tweak_dissmiss -> {
+                if (TweakManager.isFloatWindow) {
+                    if (TweakPermissionUtil.checkPermission(this)) {
+                        startService(Intent(this, TweakWindowService::class.java))
+                    } else {
+                        TweakPermissionUtil.applyPermission(this)
+                    }
+                }
+                finish()
+            }
             R.id.menu_toolbar_tweak_reset -> {
                 TweakManager.reset()
                 finish()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        TweakPermissionUtil.onActivityResult(
+            this,
+            requestCode,
+            resultCode,
+            data,
+            object : TweakPermissionUtil.OnPermissionListener {
+                override fun onPermissionGranted(isGranted: Boolean) {
+                    if (isGranted) {
+                        startService(Intent(this@TweakActivity, TweakWindowService::class.java))
+                    } else {
+                        Toast.makeText(this@TweakActivity, "请授权悬浮窗权限", Toast.LENGTH_LONG)
+                    }
+                }
+            })
     }
 }

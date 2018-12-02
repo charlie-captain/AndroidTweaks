@@ -14,10 +14,22 @@ object TweakManager {
 
     const val key = "key_tweak"
 
-    var isPersistent = true
+    internal var isPersistent = true
+
+    internal var isFloatWindow = false
 
     fun with(context: Context): TweakManager {
         weakReference = WeakReference(context)
+        return this
+    }
+
+    fun setPersistent(isPersistent: Boolean): TweakManager {
+        this.isPersistent = isPersistent
+        return this
+    }
+
+    fun setFloatWindow(isFloat: Boolean): TweakManager {
+        isFloatWindow = isFloat
         return this
     }
 
