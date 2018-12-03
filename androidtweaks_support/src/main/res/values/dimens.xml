@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="tweaks_width_float_window">24dp</dimen>
+    <dimen name="tweaks_width_cancel_radius">100dp</dimen>
 </resources>
