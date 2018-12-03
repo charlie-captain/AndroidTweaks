@@ -19,8 +19,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-//    implementation project(':androidtweaks')
 
+//    implementation project(':androidtweaks_androidx')
 //    implementation 'androidx.appcompat:appcompat:1.0.2'
 //    implementation 'androidx.activity:activity:1.0.0-alpha01'
 //    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'

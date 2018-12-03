@@ -8,36 +8,34 @@ import androidx.preference.SwitchPreferenceCompat
 import com.charlie.androidtweaks.data.*
 import com.charlie.androidtweaks.view.TweakSeekbarPrefence
 
-private const val KEY_COLLECTIONS = "collection"
 private const val KEY_TWEAKS = "child_tweaks"
 
 class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeListener {
-    private lateinit var tweaks: ArrayList<Tweak>
+    private var tweaks: ArrayList<Tweak>? = null
 
     private var tweakMap: HashMap<String, Tweak> = hashMapOf()
 
     private var categorys: HashSet<String> = hashSetOf()
-    private lateinit var collection: String
 
     companion object {
 
-        fun newInstance(collection: String, tweaks: ArrayList<Tweak>) =
-                TweakChildFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(KEY_COLLECTIONS, collection)
-                        putSerializable(KEY_TWEAKS, tweaks)
-                    }
+        fun newInstance(tweaks: ArrayList<Tweak>) =
+            TweakChildFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(KEY_TWEAKS, tweaks)
                 }
+            }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         val context = preferenceManager.context
         val screen = preferenceManager.createPreferenceScreen(context)
 
-        tweaks = arguments?.getSerializable(KEY_TWEAKS) as ArrayList<Tweak>
-        collection = arguments?.getString(KEY_COLLECTIONS)!!
+        tweaks = arguments?.getSerializable(KEY_TWEAKS) as? ArrayList<Tweak>
 
-        for (each in tweaks) {
+        if (tweaks == null) tweaks = arrayListOf()
+
+        for (each in tweaks!!) {
             categorys.add(each.category)
         }
 
@@ -45,10 +43,10 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
             val category = PreferenceCategory(context)
             category.title = c
             screen.addPreference(category)
-            for (t in tweaks) {
+            for (t in tweaks!!) {
                 if (t.category == c) {
                     when (t.type) {
-                        is TweakBool-> {
+                        is TweakBool -> {
                             val switchPreference = SwitchPreferenceCompat(context)
                             switchPreference.isPersistent = false
                             switchPreference.title = t.title
@@ -57,7 +55,7 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
                             switchPreference.onPreferenceChangeListener = this
                             category.addPreference(switchPreference)
                         }
-                        is TweakInt-> {
+                        is TweakInt -> {
                             val seekBarPreference = TweakSeekbarPrefence(context)
                             seekBarPreference.isPersistent = false
                             seekBarPreference.title = t.title
@@ -68,7 +66,7 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
                             seekBarPreference.onPreferenceChangeListener = this
                             category.addPreference(seekBarPreference)
                         }
-                        is TweakString->{
+                        is TweakString -> {
                             val editTextPreference = EditTextPreference(context)
                             editTextPreference.isPersistent = false
                             editTextPreference.title = t.title
@@ -102,7 +100,10 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
                 }
             }
         }
-
+        if (preference is EditTextPreference) {
+            //update value
+            preference.summary = newValue?.toString()
+        }
 
         return true
     }

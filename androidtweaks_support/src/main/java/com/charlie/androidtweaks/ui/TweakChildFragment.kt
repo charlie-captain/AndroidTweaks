@@ -8,23 +8,20 @@ import android.support.v7.preference.SwitchPreferenceCompat
 import com.charlie.androidtweaks.data.*
 import com.charlie.androidtweaks.view.TweakSeekbarPrefence
 
-private const val KEY_COLLECTIONS = "collection"
 private const val KEY_TWEAKS = "child_tweaks"
 
 class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeListener {
-    private lateinit var tweaks: ArrayList<Tweak>
+    private var tweaks: ArrayList<Tweak>? = null
 
     private var tweakMap: HashMap<String, Tweak> = hashMapOf()
 
     private var categorys: HashSet<String> = hashSetOf()
-    private lateinit var collection: String
 
     companion object {
 
-        fun newInstance(collection: String, tweaks: ArrayList<Tweak>) =
+        fun newInstance(tweaks: ArrayList<Tweak>) =
             TweakChildFragment().apply {
                 arguments = Bundle().apply {
-                    putString(KEY_COLLECTIONS, collection)
                     putSerializable(KEY_TWEAKS, tweaks)
                 }
             }
@@ -34,10 +31,11 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
         val context = preferenceManager.context
         val screen = preferenceManager.createPreferenceScreen(context)
 
-        tweaks = arguments?.getSerializable(KEY_TWEAKS) as ArrayList<Tweak>
-        collection = arguments?.getString(KEY_COLLECTIONS)!!
+        tweaks = arguments?.getSerializable(KEY_TWEAKS) as? ArrayList<Tweak>
 
-        for (each in tweaks) {
+        if (tweaks == null) tweaks = arrayListOf()
+
+        for (each in tweaks!!) {
             categorys.add(each.category)
         }
 
@@ -45,7 +43,7 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
             val category = PreferenceCategory(context)
             category.title = c
             screen.addPreference(category)
-            for (t in tweaks) {
+            for (t in tweaks!!) {
                 if (t.category == c) {
                     when (t.type) {
                         is TweakBool -> {
@@ -94,7 +92,7 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
      * SaveTweaks
      */
     override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
-        val key = preference?.key
+        val key = preference!!.key
         tweakMap.containsKey(key).let {
             if (it) {
                 tweakMap[key]?.let {
@@ -106,6 +104,7 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
             //update value
             preference.summary = newValue?.toString()
         }
+
         return true
     }
 }

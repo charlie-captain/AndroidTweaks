@@ -16,7 +16,6 @@ class TweakStore {
     }
 
     fun reset() {
-        var i = 0
         for (tweak in tweaks) {
             tweak.reset()
         }

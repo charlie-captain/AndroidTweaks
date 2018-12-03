@@ -11,7 +11,7 @@ class App : Application() {
 
         if (Utils.isDebug(this)) {
             Log.d("debug", "debug true")
-            TweakManager.with(this)
+            TweakManager.with(this).setPersistent(true).setFloatWindow(true).initLibrary(ExampleTweakLibrary)
         }
     }
 }

@@ -11,24 +11,29 @@ import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.Tweak
 import kotlinx.android.synthetic.main.tweaks_toolbar.*
 
+private const val TITLE_TOOLBAR = "Tweaks"
+
 class TweakActivity : AppCompatActivity() {
 
-    lateinit var baseFragmentFragment: TweakFragment
-    lateinit var tweaks: ArrayList<Tweak>
+    private var baseFragmentFragment: TweakFragment? = null
+    private var tweaks: ArrayList<Tweak>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tweak)
+        tweaks_toolbar.title = TITLE_TOOLBAR
         setSupportActionBar(tweaks_toolbar)
-        tweaks_toolbar.title = "Android Tweaks"
         tweaks_toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         tweaks = intent.getSerializableExtra(TweakManager.key) as ArrayList<Tweak>
-        baseFragmentFragment = TweakFragment.newInstance(tweaks)
+        if (tweaks == null) {
+            tweaks = arrayListOf()
+        }
+        baseFragmentFragment = TweakFragment.newInstance(tweaks!!)
         supportFragmentManager.inTransaction {
-            replace(R.id.fl_tweak, baseFragmentFragment)
+            replace(R.id.fl_tweak, baseFragmentFragment!!)
         }
     }
 
@@ -41,6 +46,7 @@ class TweakActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStackImmediate()
+            tweaks_toolbar.title = TITLE_TOOLBAR
         } else {
             super.onBackPressed()
         }
@@ -60,10 +66,5 @@ class TweakActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        TweakManager.clear()
     }
 }
