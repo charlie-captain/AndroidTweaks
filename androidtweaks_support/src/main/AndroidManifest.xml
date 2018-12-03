@@ -9,6 +9,7 @@
     <application>
         <activity android:name=".ui.TweakActivity"
                   android:theme="@style/TweakAppTheme"
+                  android:launchMode="singleTask"
         >
         </activity>
         <service android:name=".window.TweakWindowService"

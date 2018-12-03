@@ -2,9 +2,15 @@ package com.charlie.androidtweaks.window
 
 import android.content.Context
 import android.graphics.PixelFormat
+import android.os.Build
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.WindowManager
 import com.charlie.androidtweaks.R
+import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_KEY
+import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_LAYOUT_KEY
+import com.charlie.androidtweaks.ui.TweakActivity
+import com.charlie.androidtweaks.utils.TweakSharePreferenceUtil
 import com.charlie.androidtweaks.utils.TweakUtil
 
 object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsListener {
@@ -32,9 +38,13 @@ object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsLis
             mView?.setSize(mWidth)
             mView?.setWindowLayoutParams(this)
             mCancelView = TweakFloatCancelView(context)
-
+            initListener(context)
             mWindowLayoutParams = WindowManager.LayoutParams()
-            mWindowLayoutParams?.type = WindowManager.LayoutParams.TYPE_PHONE
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mWindowLayoutParams?.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+            } else {
+                mWindowLayoutParams?.type = WindowManager.LayoutParams.TYPE_PHONE
+            }
             mWindowLayoutParams?.format = PixelFormat.RGBA_8888
             mWindowLayoutParams?.gravity = Gravity.START or Gravity.TOP
             mWindowLayoutParams?.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
@@ -42,8 +52,21 @@ object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsLis
             mWindowLayoutParams?.width = TweakUtil.dp2px(mWidth.toFloat(), context.resources)
             mWindowLayoutParams?.height = TweakUtil.dp2px(mWidth.toFloat(), context.resources)
 
-            mWindowManager?.addView(mView, mWindowLayoutParams)
+            val xAndy by TweakSharePreferenceUtil(SP_TWEAKS_FLOAT_WINDOW_LAYOUT_KEY, "")
+            if (!TextUtils.isEmpty(xAndy)) {
+                val xAndyList = xAndy.split(",")
+                mWindowLayoutParams?.x = xAndyList[0].toInt()
+                mWindowLayoutParams?.y = xAndyList[1].toInt()
+            }
 
+            mWindowManager?.addView(mView, mWindowLayoutParams)
+        }
+    }
+
+    private fun initListener(context: Context) {
+        mView?.setOnClickListener {
+            val getValue by TweakSharePreferenceUtil(SP_TWEAKS_FLOAT_WINDOW_KEY, "")
+            TweakActivity.start(context, getValue)
         }
     }
 
@@ -54,6 +77,7 @@ object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsLis
 //            mWindowManager?.removeViewImmediate(mCancelView)
             mWindowManager = null
             mView = null
+            mCancelView = null
         }
     }
 
@@ -66,6 +90,15 @@ object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsLis
 
     override fun getLayoutParams(): WindowManager.LayoutParams? {
         return mWindowLayoutParams
+    }
+
+    //save sp x,y
+    fun saveLayoutParams() {
+        mWindowLayoutParams?.let {
+            val xyString = "${it.x},${it.y}"
+            var xAndy by TweakSharePreferenceUtil(SP_TWEAKS_FLOAT_WINDOW_LAYOUT_KEY, "")
+            xAndy = xyString
+        }
     }
 
 }

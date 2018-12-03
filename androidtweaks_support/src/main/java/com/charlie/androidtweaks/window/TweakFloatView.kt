@@ -1,11 +1,11 @@
 package com.charlie.androidtweaks.window
 
-import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -15,8 +15,7 @@ import com.charlie.androidtweaks.utils.TweakUtil
 
 class TweakFloatView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : ImageView(context, attrs, defStyleAttr) {
-
+) : ImageView(context, attrs, defStyleAttr), View.OnTouchListener {
     private var listener: OnViewLayoutParamsListener? = null
 
     private val statusBarHeight =
@@ -24,10 +23,15 @@ class TweakFloatView @JvmOverloads constructor(
 
     private val screenWidth = TweakUtil.screenSize(resources).widthPixels
 
+    private var startX = 0f
+
+    private var startY = 0f
+
+    private var isMove = false
+
     init {
         setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_launcher_round))
-        setOnClickListener {
-        }
+        setOnTouchListener(this)
     }
 
     fun setSize(width: Int) {
@@ -39,19 +43,18 @@ class TweakFloatView @JvmOverloads constructor(
         this.listener = listener
     }
 
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        var startX = 0f
-        var startY = 0f
-
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
                 startX = event.x
                 startY = event.y
+                isMove = false
+                return false
             }
             MotionEvent.ACTION_MOVE -> {
                 listener?.onLayoutUpdate(event.rawX - startX, event.rawY - startY - statusBarHeight)
-
+                isMove = true
+                return true
             }
             MotionEvent.ACTION_UP -> {
                 var finalX = 0f
@@ -70,9 +73,11 @@ class TweakFloatView @JvmOverloads constructor(
                     listener?.onLayoutUpdate(it.animatedValue as Float, layout.y.toFloat())
                 }
                 anim.start()
+
+                return isMove
             }
         }
-        return super.onTouchEvent(event)
+        return false
     }
 
     interface OnViewLayoutParamsListener {

@@ -1,18 +1,17 @@
 package com.charlie.androidtweaks.core
 
+import android.app.Application
 import android.content.Context
-import android.content.Intent
-import android.os.Bundle
 import com.charlie.androidtweaks.ui.TweakActivity
+import com.charlie.androidtweaks.window.TweakLifeCyclerCallback
 import java.lang.ref.WeakReference
 
 object TweakManager {
 
-    private var library: TweakLibrary? = null
+    internal var library: TweakLibrary? = null
 
     var weakReference: WeakReference<Context>? = null
 
-    const val key = "key_tweak"
 
     internal var isPersistent = true
 
@@ -30,6 +29,14 @@ object TweakManager {
 
     fun setFloatWindow(isFloat: Boolean): TweakManager {
         isFloatWindow = isFloat
+        if (isFloat) {
+            //register lifecycle
+            weakReference?.get()?.let {
+                if (it is Application) {
+                    it.registerActivityLifecycleCallbacks(TweakLifeCyclerCallback())
+                }
+            }
+        }
         return this
     }
 
@@ -57,15 +64,7 @@ object TweakManager {
             if (library == null) {
                 throw NullPointerException("tweak library can't be null")
             }
-            val intent = Intent(it, TweakActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            var bundle = Bundle()
-            bundle.putSerializable(
-                key,
-                library?.getTweaks()
-            )
-            intent.putExtras(bundle)
-            it.startActivity(intent)
+            TweakActivity.start(it)
         }
     }
 
