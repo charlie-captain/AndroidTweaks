@@ -44,7 +44,7 @@ class MainActivity : BaseActivity() {
         )
 
         btn.setOnClickListener {
-            TweakManager.initLibrary(ExampleTweakLibrary).start()
+            TweakManager.start()
         }
     }
 

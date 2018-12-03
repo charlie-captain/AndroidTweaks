@@ -3,11 +3,17 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.charlie.androidtweaks">
 
-    <application >
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW"/>
+
+    <application>
         <activity android:name=".ui.TweakActivity"
                   android:theme="@style/TweakAppTheme"
+                  android:launchMode="singleTask"
         >
         </activity>
+        <service android:name=".window.TweakWindowService"
+        />
     </application>
 
 </manifest>

@@ -17,6 +17,8 @@ class TweakFragment : TweakBaseFragment() {
     private var heads: HashSet<String> = HashSet()
     //tweaks of each head
     private var headsTweaks: HashMap<String, ArrayList<Tweak>> = HashMap()
+    //float window come back value
+    internal var floatTweak: String? = ""
 
     companion object {
 
@@ -44,6 +46,7 @@ class TweakFragment : TweakBaseFragment() {
             preference.setOnPreferenceClickListener {
                 (activity as? TweakActivity)?.tweaks_toolbar?.title = i
                 val fragment = TweakChildFragment.newInstance(headsTweaks[i] as ArrayList<Tweak>)
+                floatTweak = i
                 requireFragmentManager().beginTransaction()
                     .replace(R.id.fl_tweak, fragment)
                     .addToBackStack("tweak_child")
