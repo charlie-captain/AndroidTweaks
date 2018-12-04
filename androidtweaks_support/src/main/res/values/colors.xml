@@ -4,5 +4,5 @@
     <color name="tweaks_colorPrimaryDark">#00574B</color>
     <color name="tweaks_colorAccent">#D81B60</color>
 
-    <color name="tweaks_color_cancel_view">#565656</color>
+    <color name="tweaks_color_cancel_view">#000000</color>
 </resources>

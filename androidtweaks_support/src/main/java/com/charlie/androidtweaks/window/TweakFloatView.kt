@@ -3,6 +3,7 @@ package com.charlie.androidtweaks.window
 import android.animation.ValueAnimator
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.ViewUtils
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -29,6 +30,8 @@ class TweakFloatView @JvmOverloads constructor(
 
     private var isMove = false
 
+    private var isShowCancel = false
+
     init {
         setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_launcher_round))
         setOnTouchListener(this)
@@ -53,6 +56,11 @@ class TweakFloatView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_MOVE -> {
                 listener?.onLayoutUpdate(event.rawX - startX, event.rawY - startY - statusBarHeight)
+                if (isInDeleteArea(event))
+                    if (!isShowCancel) {
+                        isShowCancel = true
+                        listener?.cancelAnimStart(true)
+                    }
                 isMove = true
                 return true
             }
@@ -64,6 +72,11 @@ class TweakFloatView @JvmOverloads constructor(
                     finalX = (screenWidth - measuredWidth).toFloat()
                 } else {
                     finalX = 0f
+                }
+
+                if (isShowCancel) {
+                    isShowCancel = false
+                    listener?.cancelAnimStart(false)
                 }
 
                 val anim =
@@ -80,9 +93,27 @@ class TweakFloatView @JvmOverloads constructor(
         return false
     }
 
+    private fun isInDeleteArea(event: MotionEvent?): Boolean {
+        val x = event?.x
+        val y = event?.y
+        return false
+    }
+
+    private fun isRemoveAllView(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
+        val radius = Math.sqrt(((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)).toDouble())
+        return radius <= TweakUtil.dp2px(
+            (width * Math.sqrt(2.0) + TweakUtil.dimen(
+                R.dimen.tweaks_width_cancel_radius,
+                resources
+            )).toFloat(), context.resources
+        )
+    }
+
     interface OnViewLayoutParamsListener {
         fun onLayoutUpdate(x: Float, y: Float)
 
         fun getLayoutParams(): WindowManager.LayoutParams?
+
+        fun cancelAnimStart(appear: Boolean)
     }
 }

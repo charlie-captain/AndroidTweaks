@@ -42,6 +42,7 @@ object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsLis
             mView?.setSize(mWidth)
             mView?.setWindowLayoutParams(this)
             mCancelView = TweakFloatCancelView(context)
+            mCancelView?.setSize(mCancelWidth)
             initListener(context)
             mWindowLayoutParams = WindowManager.LayoutParams()
             mCancelWindowLayoutParams = WindowManager.LayoutParams()
@@ -65,16 +66,17 @@ object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsLis
                 mWindowLayoutParams?.x = xAndyList[0].toInt()
                 mWindowLayoutParams?.y = xAndyList[1].toInt()
             }
-            mWindowManager?.addView(mView, mWindowLayoutParams)
-
 
             mCancelWindowLayoutParams?.format = PixelFormat.RGBA_8888
             mCancelWindowLayoutParams?.gravity = Gravity.END or Gravity.BOTTOM
             mCancelWindowLayoutParams?.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-            mCancelWindowLayoutParams?.width = mCancelWidth
-            mCancelWindowLayoutParams?.height = mCancelWidth
+            mCancelWindowLayoutParams?.width = mCancelWidth * 2
+            mCancelWindowLayoutParams?.height = mCancelWidth * 2
             mWindowManager?.addView(mCancelView, mCancelWindowLayoutParams)
+
+            mWindowManager?.addView(mView, mWindowLayoutParams)
+
         }
     }
 
@@ -89,7 +91,7 @@ object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsLis
     override fun dismissWindow() {
         if (mWindowManager != null && mView != null) {
             mWindowManager?.removeViewImmediate(mView)
-//            mWindowManager?.removeViewImmediate(mCancelView)
+            mWindowManager?.removeViewImmediate(mCancelView)
             mWindowManager = null
             mView = null
             mCancelView = null
@@ -116,4 +118,7 @@ object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsLis
         }
     }
 
+    override fun cancelAnimStart(appear: Boolean) {
+        mCancelView?.startAnim(appear)
+    }
 }
