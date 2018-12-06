@@ -7,9 +7,14 @@
             app:showAsAction="always"
     />
 
+    <item android:id="@+id/menu_toolbar_tweak_close_window"
+          android:title="CLOSE WIN"
+          app:showAsAction="never"
+    />
+
     <item
-        android:id="@+id/menu_toolbar_tweak_reset"
-        android:title="RESET ALL"
-        app:showAsAction="never"
-        />
+            android:id="@+id/menu_toolbar_tweak_reset"
+            android:title="RESET ALL"
+            app:showAsAction="never"
+    />
 </menu>

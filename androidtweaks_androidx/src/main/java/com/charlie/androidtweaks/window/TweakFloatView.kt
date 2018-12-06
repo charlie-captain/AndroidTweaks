@@ -2,12 +2,14 @@ package com.charlie.androidtweaks.window
 
 import android.animation.ValueAnimator
 import android.content.Context
-import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
-import android.util.Log
-import android.view.*
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.utils.TweakUtil
 
