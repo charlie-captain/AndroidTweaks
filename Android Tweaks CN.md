@@ -83,5 +83,8 @@ btn.setOnClickListener {
 
 email: charlie.captain@foxmail.com
 
+## 内容更新
+- [x] 悬浮窗快捷打开
+
 ## 感谢
 https://github.com/Khan/SwiftTweaks
