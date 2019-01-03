@@ -3,6 +3,7 @@ Tweak your Android app without compiling
 
 [中文文档](https://github.com/charlie-captain/AndroidTweaks/blob/master/Android%20Tweaks%20CN.md)
 
+## [Release Note](https://github.com/charlie-captain/AndroidTweaks/blob/master/Release%20Note.md)
 ## How to use
 
 >It's temporarily unstable, so I won't upload to the bintray
