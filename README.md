@@ -68,7 +68,7 @@ dynamic tweaks
 ### getValue
 ```
 //static
-DebugLibrary.longPressToSaveIcon.value as <the type you want>
+DebugLibrary.longPressToSaveIcon.boolValue / floatValue / stringValue
 
 //get dynamic tweaks
 DebugLibrary.value(key)
