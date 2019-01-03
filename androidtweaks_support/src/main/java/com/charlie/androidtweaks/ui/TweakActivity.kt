@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -56,7 +57,11 @@ class TweakActivity : AppCompatActivity() {
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         tweaks = intent.getSerializableExtra(TWEAK_MANAGER_KEY) as? ArrayList<Tweak>
-
+        floatWindowKey = intent.getStringExtra(SP_TWEAKS_FLOAT_WINDOW_KEY)
+        var isFloat by TweakSharePreferenceUtil(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
+        if (isFloat) {
+            stopService(Intent(this, TweakWindowService::class.java))
+        }
         if (tweaks == null) {
             tweaks = arrayListOf()
         }
@@ -154,5 +159,13 @@ class TweakActivity : AppCompatActivity() {
                     }
                 }
             })
+    }
+
+    override fun onStop() {
+        super.onStop()
+        var isFloat by TweakSharePreferenceUtil(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
+        if (isFloat) {
+            startService(Intent(this, TweakWindowService::class.java))
+        }
     }
 }
