@@ -7,6 +7,7 @@ import android.view.View
 import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.data.Tweak
 import kotlinx.android.synthetic.main.tweaks_toolbar.*
+import java.util.*
 
 private const val KEY_TWEAKS = "tweakfragment"
 
@@ -14,7 +15,7 @@ class TweakFragment : TweakBaseFragment() {
 
     private var tweaks: ArrayList<Tweak>? = null
     //collections
-    private var heads: HashSet<String> = HashSet()
+    private var heads: TreeSet<String> = TreeSet()
     //tweaks of each head
     private var headsTweaks: HashMap<String, ArrayList<Tweak>> = HashMap()
     //float window come back value

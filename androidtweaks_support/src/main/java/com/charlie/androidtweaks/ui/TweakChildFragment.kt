@@ -6,7 +6,8 @@ import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceCategory
 import android.support.v7.preference.SwitchPreferenceCompat
 import com.charlie.androidtweaks.data.*
-import com.charlie.androidtweaks.view.TweakSeekbarPrefence
+import com.charlie.androidtweaks.view.TweakChangePreference
+import java.util.*
 
 private const val KEY_TWEAKS = "child_tweaks"
 
@@ -15,7 +16,7 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
 
     private var tweakMap: HashMap<String, Tweak> = hashMapOf()
 
-    private var categorys: HashSet<String> = hashSetOf()
+    private var categorys: TreeSet<String> = TreeSet()
 
     companion object {
 
@@ -55,16 +56,15 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
                             switchPreference.onPreferenceChangeListener = this
                             category.addPreference(switchPreference)
                         }
-                        is TweakInt -> {
-                            val seekBarPreference = TweakSeekbarPrefence(context)
-                            seekBarPreference.isPersistent = false
-                            seekBarPreference.title = t.title
-                            seekBarPreference.max = t.type.max
-                            seekBarPreference.min = t.type.min
-                            seekBarPreference.key = t.toString()
-                            seekBarPreference.setValue(t.value as Int)
-                            seekBarPreference.onPreferenceChangeListener = this
-                            category.addPreference(seekBarPreference)
+                        is TweakFloat -> {
+                            val changePreference = TweakChangePreference(context)
+                            changePreference.isPersistent = false
+                            changePreference.title = t.title
+                            changePreference.key = t.toString()
+                            changePreference.setIncrement(t.type.increment)
+                            changePreference.setValue(t.floatValue)
+                            changePreference.onPreferenceChangeListener = this
+                            category.addPreference(changePreference)
                         }
                         is TweakString -> {
                             val editTextPreference = EditTextPreference(context)

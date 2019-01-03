@@ -11,7 +11,7 @@ class TweakSharePreferenceUtil<T>(val name: String, val default: T) {
 
     private val spName = "sp_tweak_file"
 
-    val sharedPreferences: SharedPreferences? by lazy {
+    private val sharedPreferences: SharedPreferences? by lazy {
         TweakManager.weakReference?.let {
             it.get()?.getSharedPreferences(spName, Context.MODE_PRIVATE)
         }
@@ -21,30 +21,40 @@ class TweakSharePreferenceUtil<T>(val name: String, val default: T) {
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = putTweakValue(name, value)
 
-    fun <T> putTweakValue(key: String, value: T) = with(sharedPreferences?.edit()) {
+    private fun <T> putTweakValue(key: String, value: T) = with(sharedPreferences?.edit()) {
         Log.d(TAG_ANDROIDTWEAKS, "putValue $key   $value")
-        when (value) {
-            is Int -> this?.putInt(key, value)
-            is Boolean -> this?.putBoolean(key, value)
-            is Float -> this?.putFloat(key, value)
-            is String -> this?.putString(key, value)
-            else -> {
-                throw IllegalArgumentException("SharePreference can't get this value.")
+        try {
+            when (value) {
+                is Int -> this?.putInt(key, value)?.apply()
+                is Boolean -> this?.putBoolean(key, value)?.apply()
+                is Float -> this?.putFloat(key, value)?.apply()
+                is String -> this?.putString(key, value)?.apply()
+                else -> {
+                    throw IllegalArgumentException("SharePreference can't put this value.")
+                }
             }
+        } catch (e: Exception) {
+            Log.d(TAG_ANDROIDTWEAKS, e.toString())
         }
+    }
 
-    }?.apply()
+    private fun getTweakValue(key: String, default: T): T = with(sharedPreferences) {
 
-    fun getTweakValue(key: String, default: T): T = with(sharedPreferences) {
-
-        val value: Any? = when (default) {
-            is Int -> this?.getInt(key, default)
-            is Boolean -> this?.getBoolean(key, default)
-            is Float -> this?.getFloat(key, default)
-            is String -> this?.getString(key, default)
-            else -> {
-                throw IllegalArgumentException("SharePreference can't get this value.")
+        var value: Any? = null
+        try {
+            value = when (default) {
+                is Int -> this?.getInt(key, default)
+                is Boolean -> this?.getBoolean(key, default)
+                is Float -> this?.getFloat(key, default)
+                is String -> this?.getString(key, default)
+                else -> {
+                    throw IllegalArgumentException("SharePreference can't get this value.")
+                }
             }
+        } catch (e: ClassCastException) {
+            //remove the key
+            this?.edit()?.remove(key)?.apply()
+            Log.d(TAG_ANDROIDTWEAKS, e.toString())
         }
         Log.d(TAG_ANDROIDTWEAKS, "getValue $key   $value")
         return if (value == null) default else value as T

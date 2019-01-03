@@ -8,14 +8,14 @@ import java.io.Serializable
  * :because parcelable is not supported
  */
 data class Tweak(
-        val collection: String,
-        val category: String,
-        val title: String,
-        val type: TweakType
+    val collection: String,
+    val category: String,
+    val title: String,
+    val type: TweakType
 ) : Serializable {
 
 
-    var value: Any = type.getDefault()
+    internal var value: Any = type.getDefault()
         set(value) {
             var spValue by TweakSharePreferenceUtil(toString(), value)
             spValue = value
@@ -27,12 +27,12 @@ data class Tweak(
                     val spValue by TweakSharePreferenceUtil(toString(), type.value)
                     spValue
                 }
-                is TweakInt -> {
+                is TweakFloat -> {
                     val spValue by TweakSharePreferenceUtil(toString(), type.value)
                     spValue
                 }
-                is TweakString->{
-                    val spValue by TweakSharePreferenceUtil(toString(),type.value)
+                is TweakString -> {
+                    val spValue by TweakSharePreferenceUtil(toString(), type.value)
                     spValue
                 }
                 else -> {
@@ -40,6 +40,23 @@ data class Tweak(
                 }
             }
         }
+
+    var boolValue: Boolean = false
+        get() {
+            return value as? Boolean ?: field
+        }
+
+    var floatValue: Float = 0f
+        get() {
+            return value as? Float ?: field
+
+        }
+
+    var stringValue: String = String()
+        get() {
+            return value as? String ?: field
+        }
+
 
     /**
      * reset the value to default
@@ -49,10 +66,10 @@ data class Tweak(
             is TweakBool -> {
                 type.defaultValue
             }
-            is TweakInt -> {
+            is TweakFloat -> {
                 type.defaultValue
             }
-            is TweakString->{
+            is TweakString -> {
                 type.defaultValue
             }
             else -> {
@@ -63,6 +80,6 @@ data class Tweak(
 
     override fun toString(): String {
 
-        return "${collection}_${category}_${title}"
+        return "${collection}_${category}_$title"
     }
 }

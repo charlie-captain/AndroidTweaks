@@ -1,24 +1,14 @@
 package com.charlie.androidtweaks.ui
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.core.TweakManager
-import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_IS_KEY
-import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_KEY
-import com.charlie.androidtweaks.data.TWEAK_MANAGER_KEY
 import com.charlie.androidtweaks.data.Tweak
-import com.charlie.androidtweaks.utils.TweakPermissionUtil
-import com.charlie.androidtweaks.utils.TweakSharePreferenceUtil
-import com.charlie.androidtweaks.window.TweakWindowManager
-import com.charlie.androidtweaks.window.TweakWindowService
 import kotlinx.android.synthetic.main.tweaks_toolbar.*
 
 private const val TITLE_TOOLBAR = "Tweaks"
