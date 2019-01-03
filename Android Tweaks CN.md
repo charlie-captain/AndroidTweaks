@@ -66,7 +66,7 @@ object DebugLibrary : TweakLibrary() {
 ### 获取值
 ```
 //静态
-DebugLibrary.longPressToSaveIcon.value as (转换成你想要的类型，一般是不会为null)
+DebugLibrary.longPressToSaveIcon.boolValue \ floatValue \ stringValue
 
 //动态添加的tweaks
 DebugLibrary.value(key)
