@@ -24,7 +24,13 @@ class TweakBool(val defaultValue: Boolean, var value: Boolean = defaultValue) : 
  * Float
  * @param increment: 增量 float,默认为1f
  */
-class TweakFloat(val defaultValue: Float, var increment: Float = 1f, var value: Float = defaultValue) : TweakType() {
+class TweakFloat(
+    val defaultValue: Float,
+    val increment: Float = 1f,
+    val min: Float = 0f,
+    val max: Float = 100f,
+    var value: Float = defaultValue
+) : TweakType() {
     override fun getValue(): Any {
         return value
     }

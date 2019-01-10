@@ -5,14 +5,13 @@ import android.graphics.PixelFormat
 import android.os.Build
 import android.text.TextUtils
 import android.view.Gravity
-import android.view.Window
 import android.view.WindowManager
 import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_KEY
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_LAYOUT_KEY
 import com.charlie.androidtweaks.ui.TweakActivity
-import com.charlie.androidtweaks.utils.TweakSharePreferenceUtil
 import com.charlie.androidtweaks.utils.TweakUtil
+import com.charlie.androidtweaks.utils.TweakValueDelegate
 
 object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsListener {
 
@@ -60,8 +59,8 @@ object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsLis
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
             mWindowLayoutParams?.width = TweakUtil.dp2px(mWidth.toFloat(), context.resources)
             mWindowLayoutParams?.height = TweakUtil.dp2px(mWidth.toFloat(), context.resources)
-            
-            val xAndy by TweakSharePreferenceUtil(SP_TWEAKS_FLOAT_WINDOW_LAYOUT_KEY, "")
+
+            val xAndy by TweakValueDelegate(SP_TWEAKS_FLOAT_WINDOW_LAYOUT_KEY, "")
             if (!TextUtils.isEmpty(xAndy)) {
                 val xAndyList = xAndy.split(",")
                 mWindowLayoutParams?.x = xAndyList[0].toInt()
@@ -85,7 +84,7 @@ object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsLis
 
     private fun initListener(context: Context) {
         mView?.setOnClickListener {
-            val getValue by TweakSharePreferenceUtil(SP_TWEAKS_FLOAT_WINDOW_KEY, "")
+            val getValue by TweakValueDelegate(SP_TWEAKS_FLOAT_WINDOW_KEY, "")
             TweakActivity.start(context, getValue)
         }
     }
@@ -117,7 +116,7 @@ object TweakWindowManager : TweakWindowImp, TweakFloatView.OnViewLayoutParamsLis
     fun saveLayoutParams() {
         mWindowLayoutParams?.let {
             val xyString = "${it.x},${it.y}"
-            var xAndy by TweakSharePreferenceUtil(SP_TWEAKS_FLOAT_WINDOW_LAYOUT_KEY, "")
+            var xAndy by TweakValueDelegate(SP_TWEAKS_FLOAT_WINDOW_LAYOUT_KEY, "")
             xAndy = xyString
         }
     }

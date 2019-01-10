@@ -5,7 +5,7 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_IS_KEY
-import com.charlie.androidtweaks.utils.TweakSharePreferenceUtil
+import com.charlie.androidtweaks.utils.TweakValueDelegate
 
 class TweakLifeCyclerCallback : Application.ActivityLifecycleCallbacks {
 
@@ -17,7 +17,7 @@ class TweakLifeCyclerCallback : Application.ActivityLifecycleCallbacks {
     override fun onActivityStarted(activity: Activity?) {
         count++
         if (count == 1) {
-            val isFloat by TweakSharePreferenceUtil(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
+            val isFloat by TweakValueDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
             if (isFloat) {
                 activity?.startService(Intent(activity, TweakWindowService::class.java))
             }

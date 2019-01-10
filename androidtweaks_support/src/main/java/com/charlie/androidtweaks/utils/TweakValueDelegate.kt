@@ -1,21 +1,15 @@
 package com.charlie.androidtweaks.utils
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.TAG_ANDROIDTWEAKS
 import kotlin.reflect.KProperty
 
-class TweakSharePreferenceUtil<T>(val name: String, val default: T) {
+class TweakValueDelegate<T>(val name: String, val default: T) {
 
-    private val spName = "sp_tweak_file"
+    private val sharedPreferences = TweakManager.sharedPreferences
 
-    private val sharedPreferences: SharedPreferences? by lazy {
-        TweakManager.weakReference?.let {
-            it.get()?.getSharedPreferences(spName, Context.MODE_PRIVATE)
-        }
-    }
+    private var mSaveValue: Any? = null
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T = getTweakValue(name, default)
 
@@ -33,13 +27,18 @@ class TweakSharePreferenceUtil<T>(val name: String, val default: T) {
                     throw IllegalArgumentException("SharePreference can't put this value.")
                 }
             }
+            mSaveValue = value
+            Log.d(TAG_ANDROIDTWEAKS, "restore ")
         } catch (e: Exception) {
             Log.d(TAG_ANDROIDTWEAKS, e.toString())
         }
     }
 
     private fun getTweakValue(key: String, default: T): T = with(sharedPreferences) {
-
+        if (mSaveValue != null) {
+            Log.d(TAG_ANDROIDTWEAKS, "restore KeyValue $key $mSaveValue")
+            return mSaveValue as T
+        }
         var value: Any? = null
         try {
             value = when (default) {

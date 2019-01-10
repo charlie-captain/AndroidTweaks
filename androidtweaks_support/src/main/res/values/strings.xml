@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">AndroidTweaks</string>
     <string name="string_toast_float_window_permission">请授权悬浮窗权限</string>
+    <string name="change_preference_dialog_edit_text_hint">Float</string>
+
 </resources>

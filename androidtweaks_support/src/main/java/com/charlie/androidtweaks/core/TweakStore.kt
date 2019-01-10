@@ -6,16 +6,16 @@ class TweakStore {
 
     internal var tweaks: ArrayList<Tweak> = arrayListOf()
 
-    fun valueOfTweak(key: String): Any? {
+    internal fun valueOfTweak(key: String): Tweak? {
         for (tweak in tweaks) {
             if (tweak.toString() == key) {
-                return tweak.value
+                return tweak
             }
         }
         return null
     }
 
-    fun reset() {
+    internal fun reset() {
         for (tweak in tweaks) {
             tweak.reset()
         }

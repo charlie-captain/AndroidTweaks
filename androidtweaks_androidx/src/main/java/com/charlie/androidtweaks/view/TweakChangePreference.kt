@@ -18,9 +18,31 @@ class TweakChangePreference : Preference, View.OnClickListener {
     private var mAddButton: ImageButton? = null
     private var mMinusButton: ImageButton? = null
 
-    private var mIncrement: Float = 1f
+    internal var mMin: Float = 0f
+        set(min) {
+            if (min != field && min <= mMax) {
+                field = min
+                notifyChanged()
+            }
+        }
 
-    private var mValue: Float = 0f
+    internal var mMax: Float = 100f
+        set(max) {
+            if (max != field && max >= field) {
+                field = max
+                notifyChanged()
+            }
+        }
+
+    internal var mIncrement: Float = 1f
+        set(increment) {
+            if (increment != field) {
+                field = increment
+                notifyChanged()
+            }
+        }
+
+    internal var mValue: Float = 0f
 
     /**
      * 是否为负数
@@ -71,22 +93,14 @@ class TweakChangePreference : Preference, View.OnClickListener {
         }
     }
 
-    fun setIncrement(increment: Float) {
-        if (increment != mIncrement) {
-            mIncrement = increment
-            notifyChanged()
-        }
-    }
-
-    fun setNegetive(isNegative: Boolean) {
-        this.isNegative = isNegative
-    }
-
-
     fun setValue(value: Float) {
         if (mValue != value) {
             if (!isNegative && value < 0) {
                 //不可为负数
+                return
+            }
+            if (value < mMin || value > mMax) {
+                //排除范围
                 return
             }
             mValue = value

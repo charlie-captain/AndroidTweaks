@@ -1,17 +1,22 @@
 package com.charlie.androidtweaks.ui
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.view.View
+import android.widget.EditText
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.SwitchPreferenceCompat
+import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.data.*
 import com.charlie.androidtweaks.view.TweakChangePreference
 import java.util.*
 
 private const val KEY_TWEAKS = "child_tweaks"
 
-class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeListener {
+class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeListener,
+    Preference.OnPreferenceClickListener {
     private var tweaks: ArrayList<Tweak>? = null
 
     private var tweakMap: HashMap<String, Tweak> = hashMapOf()
@@ -61,9 +66,12 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
                             changePreference.isPersistent = false
                             changePreference.title = t.title
                             changePreference.key = t.toString()
-                            changePreference.setIncrement(t.type.increment)
+                            changePreference.mMax = t.type.max
+                            changePreference.mMin = t.type.min
+                            changePreference.mIncrement = t.type.increment
                             changePreference.setValue(t.floatValue)
                             changePreference.onPreferenceChangeListener = this
+                            changePreference.onPreferenceClickListener = this
                             category.addPreference(changePreference)
                         }
                         is TweakString -> {
@@ -87,6 +95,37 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
         }
         preferenceScreen = screen
     }
+
+    override fun onPreferenceClick(preference: Preference?): Boolean {
+        when (preference) {
+            is TweakChangePreference -> {
+                showChangeEditTextDialog(preference)
+            }
+        }
+        return true
+    }
+
+    /**
+     * show edit-text dialog
+     */
+    private fun showChangeEditTextDialog(preference: TweakChangePreference?) {
+        preference ?: return
+        val view = View.inflate(context, R.layout.tweaks_dialog_edit_text, null)
+        val editText = view.findViewById<EditText>(R.id.tweaks_edit_text)
+        editText.setText(preference.mValue.toString())
+        AlertDialog.Builder(context).setView(view)
+            .setTitle(preference.title)
+            .setCancelable(true)
+            .setPositiveButton("yes") { _, _ ->
+                val value = editText.text.toString().toFloatOrNull()
+                value?.let {
+                    preference.setValue(it)
+                }
+            }.setNegativeButton("no") { dialog, _ ->
+                dialog.dismiss()
+            }.show()
+    }
+
 
     /**
      * SaveTweaks

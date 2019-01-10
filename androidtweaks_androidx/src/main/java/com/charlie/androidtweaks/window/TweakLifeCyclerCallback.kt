@@ -5,7 +5,6 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_IS_KEY
-import com.charlie.androidtweaks.utils.TweakSharePreferenceUtil
 
 class TweakLifeCyclerCallback : Application.ActivityLifecycleCallbacks {
 

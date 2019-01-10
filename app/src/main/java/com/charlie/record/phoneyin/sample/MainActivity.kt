@@ -2,10 +2,11 @@ package com.charlie.record.phoneyin.sample
 
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
+import android.util.Log
 import android.view.View
 import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.Tweak
-import com.charlie.androidtweaks.data.TweakInt
+import com.charlie.androidtweaks.data.TweakFloat
 import com.charlie.record.phoneyin.BaseActivity
 import com.charlie.record.phoneyin.R
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,10 +22,9 @@ class MainActivity : BaseActivity() {
                 "UI",
                 "button",
                 "width",
-                TweakInt(
-                    btn.width,
-                    0,
-                    screenWidth
+                TweakFloat(
+                    100f,
+                    max = screenWidth.toFloat()
                 )
             )
         )
@@ -35,16 +35,15 @@ class MainActivity : BaseActivity() {
                 "UI",
                 "button",
                 "height",
-                TweakInt(
-                    btn.height,
-                    0,
-                    screenHeight
+                TweakFloat(
+                    100f,
+                    max = screenHeight.toFloat()
                 )
             )
         )
 
         btn.setOnClickListener {
-            TweakManager.start()
+            TweakManager.start(ExampleTweakLibrary)
         }
     }
 
@@ -60,20 +59,21 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
+        Log.d("aaa", "${ExampleTweakLibrary.switchButton1.boolValue}")
 
-        btn_example.visibility = if (ExampleTweakLibrary.switchButton1.value as Boolean) View.VISIBLE else View.INVISIBLE
+        btn_example.visibility =
+                if (ExampleTweakLibrary.switchButton1.boolValue) View.VISIBLE else View.INVISIBLE
 
 
-        val width = ExampleTweakLibrary.value("UI_button_width")
-        val height = ExampleTweakLibrary.value("UI_button_height")
+        val width = ExampleTweakLibrary.value("UI_button_width", 200f)
+        val height = ExampleTweakLibrary.value("UI_button_height", 200f)
 
         val layout = btn_example.layoutParams
-        layout.width = width as Int
-        layout.height = height as Int
+        layout.width = width.toInt()
+        layout.height = height.toInt()
         btn_example.layoutParams = layout
 
-        text.text = ExampleTweakLibrary.stringtext.value as CharSequence?
-
+        text.text = ExampleTweakLibrary.stringtext.stringValue
 
     }
 }

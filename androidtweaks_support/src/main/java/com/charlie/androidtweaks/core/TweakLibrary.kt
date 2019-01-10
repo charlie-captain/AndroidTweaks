@@ -10,15 +10,17 @@ abstract class TweakLibrary {
         tweakStore.tweaks.add(tweak)
     }
 
-    fun value(key: String): Any? {
-        return tweakStore.valueOfTweak(key)
+    fun <T> value(key: String, default: T): T {
+        val tweak = tweakStore.valueOfTweak(key)
+        return if (tweak == null) default else tweak?.value as T
     }
+
 
     fun addAll(tweaks: ArrayList<Tweak>) {
         tweakStore.tweaks.addAll(tweaks)
     }
 
-    fun reset() {
+    internal fun reset() {
         tweakStore.reset()
     }
 
