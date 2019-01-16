@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -13,7 +14,7 @@ import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_IS_KEY
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_KEY
-import com.charlie.androidtweaks.data.TWEAK_MANAGER_KEY
+import com.charlie.androidtweaks.data.TAG_ANDROIDTWEAKS
 import com.charlie.androidtweaks.data.Tweak
 import com.charlie.androidtweaks.utils.TweakPermissionUtil
 import com.charlie.androidtweaks.utils.TweakValueDelegate
@@ -26,7 +27,6 @@ private const val TITLE_TOOLBAR = "Tweaks"
 class TweakActivity : AppCompatActivity() {
     private var baseFragmentFragment: TweakFragment? = null
     private var tweaks: ArrayList<Tweak>? = null
-
     private var floatWindowKey: String? = null
 
     companion object {
@@ -35,12 +35,6 @@ class TweakActivity : AppCompatActivity() {
             val intent = Intent(context, TweakActivity::class.java)
             intent.putExtra(SP_TWEAKS_FLOAT_WINDOW_KEY, tweakKey)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            var bundle = Bundle()
-            bundle.putSerializable(
-                TWEAK_MANAGER_KEY,
-                TweakManager.library?.getTweaks()
-            )
-            intent.putExtras(bundle)
             context.startActivity(intent)
         }
     }
@@ -54,7 +48,8 @@ class TweakActivity : AppCompatActivity() {
             onBackPressed()
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        tweaks = intent.getParcelableArrayListExtra(TWEAK_MANAGER_KEY)
+        tweaks = TweakManager.getTweaks() ?: arrayListOf()
+        Log.d(TAG_ANDROIDTWEAKS, tweaks.toString())
         floatWindowKey = intent.getStringExtra(SP_TWEAKS_FLOAT_WINDOW_KEY)
         var isFloat by TweakValueDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
         if (isFloat) {
@@ -67,6 +62,11 @@ class TweakActivity : AppCompatActivity() {
         supportFragmentManager.inTransaction {
             replace(R.id.fl_tweak, baseFragmentFragment!!)
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
     }
 
     fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit) {

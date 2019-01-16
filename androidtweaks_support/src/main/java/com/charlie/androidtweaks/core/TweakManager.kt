@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Bundle
+import com.charlie.androidtweaks.shake.TweakShakeService
 import com.charlie.androidtweaks.ui.TweakActivity
 import com.charlie.androidtweaks.window.TweakLifeCyclerCallback
 import java.lang.ref.WeakReference
@@ -19,12 +19,20 @@ object TweakManager {
 
     internal var weakReference: WeakReference<Context>? = null
 
-    internal const val key = "key_tweak"
-
     private const val SP_FILE_NAME = "sp_tweak_file"
 
     internal lateinit var sharedPreferences: SharedPreferences
 
+    private var isShakeEnable = false
+
+    /**
+     * App init
+     */
+    fun with(context: Context): TweakManager {
+        weakReference = WeakReference(context)
+        sharedPreferences = context.getSharedPreferences(SP_FILE_NAME, Context.MODE_PRIVATE)
+        return this
+    }
 
     fun setPersistent(isPersistent: Boolean): TweakManager {
         this.isPersistent = isPersistent
@@ -45,21 +53,33 @@ object TweakManager {
     }
 
     /**
+     * set shake enable
+     */
+    fun setShakeEnable(isEnable: Boolean): TweakManager {
+        isShakeEnable = isEnable
+        return this
+    }
+
+    /**
      * when the app destroy , isPersistent to save the key-value
      */
-    fun destroy() {
+    fun destroy(context: Context) {
         if (!isPersistent) {
             reset()
+        }
+        if (isShakeEnable) {
+            context.stopService(Intent(context, TweakShakeService::class.java))
         }
     }
 
     /**
-     * App init
+     * init
      */
-    fun with(context: Context): TweakManager {
-        weakReference = WeakReference(context)
-        sharedPreferences = context.getSharedPreferences(SP_FILE_NAME, Context.MODE_PRIVATE)
-        return this
+    fun init(tweakLibrary: TweakLibrary?) {
+        library = tweakLibrary ?: return
+        weakReference?.get()?.let {
+            checkShakeConfig(it)
+        }
     }
 
     /**
@@ -80,14 +100,23 @@ object TweakManager {
             }
             val intent = Intent(it, TweakActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            var bundle = Bundle()
-            bundle.putParcelableArrayList(
-                key,
-                library?.getTweaks()
-            )
-            intent.putExtras(bundle)
             it.startActivity(intent)
         }
     }
+
+    /**
+     * check isShake enable
+     */
+    private fun checkShakeConfig(context: Context) {
+        if (isShakeEnable) {
+            context.startService(Intent(context, TweakShakeService::class.java))
+        }
+    }
+
+    /**
+     * get tweaks
+     */
+    fun getTweaks() = library?.getTweaks()
+
 
 }

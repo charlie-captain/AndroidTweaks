@@ -3,6 +3,7 @@ package com.charlie.androidtweaks.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -13,7 +14,7 @@ import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_IS_KEY
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_KEY
-import com.charlie.androidtweaks.data.TWEAK_MANAGER_KEY
+import com.charlie.androidtweaks.data.TAG_ANDROIDTWEAKS
 import com.charlie.androidtweaks.data.Tweak
 import com.charlie.androidtweaks.utils.TweakPermissionUtil
 import com.charlie.androidtweaks.utils.TweakValueDelegate
@@ -30,20 +31,11 @@ class TweakActivity : AppCompatActivity() {
 
     private var floatWindowKey: String? = null
 
-    companion object {
-
-        fun start(context: Context, tweakKey: String = "") {
-            val intent = Intent(context, TweakActivity::class.java)
-            intent.putExtra(SP_TWEAKS_FLOAT_WINDOW_KEY, tweakKey)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            var bundle = Bundle()
-            bundle.putSerializable(
-                TWEAK_MANAGER_KEY,
-                TweakManager.library?.getTweaks()
-            )
-            intent.putExtras(bundle)
-            context.startActivity(intent)
-        }
+    fun start(context: Context, tweakKey: String = "") {
+        val intent = Intent(context, TweakActivity::class.java)
+        intent.putExtra(SP_TWEAKS_FLOAT_WINDOW_KEY, tweakKey)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +47,8 @@ class TweakActivity : AppCompatActivity() {
             onBackPressed()
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        tweaks = intent.getParcelableArrayListExtra(TWEAK_MANAGER_KEY)
+        tweaks = TweakManager.getTweaks() ?: arrayListOf()
+        Log.d(TAG_ANDROIDTWEAKS, tweaks.toString())
         floatWindowKey = intent.getStringExtra(SP_TWEAKS_FLOAT_WINDOW_KEY)
         var isFloat by TweakValueDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
         if (isFloat) {

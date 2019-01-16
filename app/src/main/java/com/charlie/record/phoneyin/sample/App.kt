@@ -11,7 +11,14 @@ class App : Application() {
 
         if (Utils.isDebug(this)) {
             Log.d("debug", "debug true")
-            TweakManager.with(this).setPersistent(true).setFloatWindow(true)
+            TweakManager.with(this).setPersistent(true).setShakeEnable(true).init(ExampleTweakLibrary)
         }
     }
+
+
+    override fun onTerminate() {
+        super.onTerminate()
+        TweakManager.destroy(this)
+    }
+
 }
