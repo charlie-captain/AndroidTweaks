@@ -1,4 +1,6 @@
 # Release Note
+### 0.4
+add shake to debug [ 新增 摇一摇进入Tweak ]
 
 ### 0.3
 优化使用方法，保证版本升级

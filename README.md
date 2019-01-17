@@ -11,7 +11,7 @@ Tweak your Android app without compiling
 ### App
 
 ```
-TweakManager.with(this)
+TweakManager.with(this).setPersistent(true).setFloatWindow(true).setShakeEnable(true).init()
 ```
 
 ### object : TweakLibrary
@@ -77,7 +77,7 @@ DebugLibrary.value(key)
 ### start TweakConfig
 ```
 btn.setOnClickListener {
-    TweakManager.initLibrary(DebugLibrary).start()
+    TweakManager.start(DebugLibrary)
 }
 ```
 
