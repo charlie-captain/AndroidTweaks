@@ -9,7 +9,7 @@
 ### App
 
 ```
-TweakManager.with(this)
+TweakManager.with(this).setPersistent(true).setFloatWindow(true).setShakeEnable(true).init()
 ```
 
 ### object 继承 TweakLibrary
@@ -74,7 +74,7 @@ DebugLibrary.value(key)
 ### 启动Tweak程序
 ```
 btn.setOnClickListener {
-    TweakManager.initLibrary(DebugLibrary).start()
+    TweakManager.start(DebugLibrary)
 }
 ```
 
@@ -82,9 +82,6 @@ btn.setOnClickListener {
 欢迎大家一起和我来完善这个库
 
 email: charlie.captain@foxmail.com
-
-## 内容更新
-- [x] 悬浮窗快捷打开
 
 ## 感谢
 https://github.com/Khan/SwiftTweaks
