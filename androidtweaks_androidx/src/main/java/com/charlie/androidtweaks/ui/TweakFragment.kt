@@ -5,11 +5,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.preference.Preference
 import com.charlie.androidtweaks.R
+import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.Tweak
 import kotlinx.android.synthetic.main.tweaks_toolbar.*
 import java.util.*
-
-private const val KEY_TWEAKS = "tweakfragment"
 
 class TweakFragment : TweakBaseFragment() {
     private var tweaks: ArrayList<Tweak>? = null
@@ -20,33 +19,23 @@ class TweakFragment : TweakBaseFragment() {
     //float window come back value
     internal var floatTweak: String? = ""
 
-    companion object {
-
-        fun newInstance(tweaks: ArrayList<Tweak>) =
-            TweakFragment().apply {
-                arguments = Bundle().apply {
-                    putSerializable(KEY_TWEAKS, tweaks)
-                }
-            }
-    }
-
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         val context = preferenceManager.context
         val screen = preferenceManager.createPreferenceScreen(context)
 
-        tweaks = arguments?.getSerializable(KEY_TWEAKS) as? ArrayList<Tweak>
+        tweaks = TweakManager.getTweaks() ?: arrayListOf()
 
-        for (i in tweaks!!) {
-            heads.add(i.collection)
+        for (tweak in tweaks!!) {
+            heads.add(tweak.collection)
         }
 
-        for (i in heads) {
+        for (collection in heads) {
             val preference = Preference(context)
-            preference.title = i
+            preference.title = collection
             preference.setOnPreferenceClickListener {
-                (activity as? TweakActivity)?.tweaks_toolbar?.title = i
-                val fragment = TweakChildFragment.newInstance(headsTweaks[i] as ArrayList<Tweak>)
-                floatTweak = i
+                (activity as? TweakActivity)?.tweaks_toolbar?.title = collection
+                val fragment = TweakChildFragment.newInstance(collection)
+                floatTweak = collection
                 requireFragmentManager().beginTransaction()
                     .replace(R.id.fl_tweak, fragment)
                     .addToBackStack("tweak_child")

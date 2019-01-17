@@ -9,26 +9,27 @@ import android.support.v7.preference.SwitchPreferenceCompat
 import android.view.View
 import android.widget.EditText
 import com.charlie.androidtweaks.R
+import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.*
 import com.charlie.androidtweaks.view.TweakChangePreference
 import java.util.*
 
-private const val KEY_TWEAKS = "child_tweaks"
-
 class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeListener,
     Preference.OnPreferenceClickListener {
-    private var tweaks: ArrayList<Tweak>? = null
-
+    private var allTweaks: ArrayList<Tweak>? = null
+    private var tweaks: List<Tweak> = arrayListOf()
     private var tweakMap: HashMap<String, Tweak> = hashMapOf()
 
-    private var categorys: TreeSet<String> = TreeSet()
+    private var categories: TreeSet<String> = TreeSet()
+    private var collection: String? = null
 
     companion object {
+        private const val KEY_COLLECTION = "tweaks_collection"
 
-        fun newInstance(tweaks: ArrayList<Tweak>) =
+        fun newInstance(collection: String) =
             TweakChildFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(KEY_TWEAKS, tweaks)
+                    putString(KEY_COLLECTION, collection)
                 }
             }
     }
@@ -37,15 +38,19 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
         val context = preferenceManager.context
         val screen = preferenceManager.createPreferenceScreen(context)
 
-        tweaks = arguments?.getSerializable(KEY_TWEAKS) as? ArrayList<Tweak>
+        collection = arguments?.getString(KEY_COLLECTION) ?: ""
 
-        if (tweaks == null) tweaks = arrayListOf()
+        allTweaks = TweakManager.getTweaks() ?: arrayListOf()
 
-        for (each in tweaks!!) {
-            categorys.add(each.category)
+        tweaks = allTweaks!!.filter {
+            it.collection == collection
         }
 
-        for (c in categorys) {
+        for (tweak in tweaks) {
+            categories.add(tweak.category)
+        }
+
+        for (c in categories) {
             val category = PreferenceCategory(context)
             category.title = c
             screen.addPreference(category)

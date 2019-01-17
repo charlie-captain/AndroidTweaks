@@ -9,26 +9,28 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.SwitchPreferenceCompat
 import com.charlie.androidtweaks.R
+import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.*
 import com.charlie.androidtweaks.view.TweakChangePreference
 import java.util.*
 
-private const val KEY_TWEAKS = "child_tweaks"
 
 class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeListener,
     Preference.OnPreferenceClickListener {
-    private var tweaks: ArrayList<Tweak>? = null
-
+    private var allTweaks: ArrayList<Tweak>? = null
+    private var tweaks: List<Tweak> = arrayListOf()
     private var tweakMap: HashMap<String, Tweak> = hashMapOf()
 
-    private var categorys: TreeSet<String> = TreeSet()
+    private var categories: TreeSet<String> = TreeSet()
+    private var collection: String? = null
 
     companion object {
+        private const val KEY_COLLECTION = "tweaks_collection"
 
-        fun newInstance(tweaks: ArrayList<Tweak>) =
+        fun newInstance(collection: String) =
             TweakChildFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(KEY_TWEAKS, tweaks)
+                    putString(KEY_COLLECTION, collection)
                 }
             }
     }
@@ -37,39 +39,43 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
         val context = preferenceManager.context
         val screen = preferenceManager.createPreferenceScreen(context)
 
-        tweaks = arguments?.getSerializable(KEY_TWEAKS) as? ArrayList<Tweak>
+        collection = arguments?.getString(KEY_COLLECTION) ?: ""
 
-        if (tweaks == null) tweaks = arrayListOf()
+        allTweaks = TweakManager.getTweaks() ?: arrayListOf()
 
-        for (each in tweaks!!) {
-            categorys.add(each.category)
+        tweaks = allTweaks!!.filter {
+            it.collection == collection
         }
 
-        for (c in categorys) {
+        for (tweak in tweaks) {
+            categories.add(tweak.category)
+        }
+
+        for (c in categories) {
             val category = PreferenceCategory(context)
             category.title = c
             screen.addPreference(category)
-            for (t in tweaks!!) {
-                if (t.category == c) {
-                    when (t.type) {
+            for (tweak in tweaks) {
+                if (tweak.category == c) {
+                    when (tweak.type) {
                         is TweakBool -> {
                             val switchPreference = SwitchPreferenceCompat(context)
                             switchPreference.isPersistent = false
-                            switchPreference.title = t.title
-                            switchPreference.key = t.toString()
-                            switchPreference.isChecked = t.value as Boolean
+                            switchPreference.title = tweak.title
+                            switchPreference.key = tweak.toString()
+                            switchPreference.isChecked = tweak.value as Boolean
                             switchPreference.onPreferenceChangeListener = this
                             category.addPreference(switchPreference)
                         }
                         is TweakFloat -> {
                             val changePreference = TweakChangePreference(context)
                             changePreference.isPersistent = false
-                            changePreference.title = t.title
-                            changePreference.key = t.toString()
-                            changePreference.mMax = t.type.max
-                            changePreference.mMin = t.type.min
-                            changePreference.mIncrement = t.type.increment
-                            changePreference.setValue(t.floatValue)
+                            changePreference.title = tweak.title
+                            changePreference.key = tweak.toString()
+                            changePreference.mMax = tweak.type.max
+                            changePreference.mMin = tweak.type.min
+                            changePreference.mIncrement = tweak.type.increment
+                            changePreference.setValue(tweak.floatValue)
                             changePreference.onPreferenceChangeListener = this
                             changePreference.onPreferenceClickListener = this
                             category.addPreference(changePreference)
@@ -77,11 +83,11 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
                         is TweakString -> {
                             val editTextPreference = EditTextPreference(context)
                             editTextPreference.isPersistent = false
-                            editTextPreference.title = t.title
-                            editTextPreference.dialogTitle = t.title
-                            editTextPreference.text = t.value as? String
-                            editTextPreference.summary = t.value as? String
-                            editTextPreference.key = t.toString()
+                            editTextPreference.title = tweak.title
+                            editTextPreference.dialogTitle = tweak.title
+                            editTextPreference.text = tweak.value as? String
+                            editTextPreference.summary = tweak.value as? String
+                            editTextPreference.key = tweak.toString()
                             editTextPreference.onPreferenceChangeListener = this
                             category.addPreference(editTextPreference)
                         }
@@ -89,7 +95,7 @@ class TweakChildFragment : TweakBaseFragment(), Preference.OnPreferenceChangeLis
                             throw IllegalArgumentException(EXCEPTION_ILLEGAL_ARGUMENT)
                         }
                     }
-                    tweakMap[t.toString()] = t
+                    tweakMap[tweak.toString()] = tweak
                 }
             }
         }

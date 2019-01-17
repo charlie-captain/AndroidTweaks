@@ -3,7 +3,6 @@ package com.charlie.androidtweaks.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -14,20 +13,17 @@ import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_IS_KEY
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_KEY
-import com.charlie.androidtweaks.data.TAG_ANDROIDTWEAKS
-import com.charlie.androidtweaks.data.Tweak
 import com.charlie.androidtweaks.utils.TweakPermissionUtil
 import com.charlie.androidtweaks.utils.TweakValueDelegate
 import com.charlie.androidtweaks.window.TweakWindowManager
 import com.charlie.androidtweaks.window.TweakWindowService
 import kotlinx.android.synthetic.main.tweaks_toolbar.*
 
-private const val TITLE_TOOLBAR = "Tweaks"
-
 class TweakActivity : AppCompatActivity() {
 
     private var baseFragmentFragment: TweakFragment? = null
-    private var tweaks: ArrayList<Tweak>? = null
+
+    private val TITLE_TOOLBAR = "Tweaks"
 
     private var floatWindowKey: String? = null
 
@@ -47,17 +43,12 @@ class TweakActivity : AppCompatActivity() {
             onBackPressed()
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        tweaks = TweakManager.getTweaks() ?: arrayListOf()
-        Log.d(TAG_ANDROIDTWEAKS, tweaks.toString())
         floatWindowKey = intent.getStringExtra(SP_TWEAKS_FLOAT_WINDOW_KEY)
         var isFloat by TweakValueDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
         if (isFloat) {
             stopService(Intent(this, TweakWindowService::class.java))
         }
-        if (tweaks == null) {
-            tweaks = arrayListOf()
-        }
-        baseFragmentFragment = TweakFragment.newInstance(tweaks!!)
+        baseFragmentFragment = TweakFragment()
         supportFragmentManager.inTransaction {
             replace(R.id.fl_tweak, baseFragmentFragment!!)
         }
