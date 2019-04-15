@@ -1,20 +1,30 @@
 package com.charlie.androidtweaks.data
 
-import android.os.Parcel
-import android.os.Parcelable
+import android.content.Context
 import com.charlie.androidtweaks.utils.TweakValueDelegate
 
 /**
  * Tweak
+ * @param collection 一级目录
+ * @param category 二级分类
+ * @param title item的命名
+ * @param type 参考TweakType
+ * @param callback 回调接口，在数据发生变化时
  */
 data class Tweak(
     val collection: String,
     val category: String,
     val title: String,
-    val type: TweakType
-) : Parcelable {
+    val type: TweakType,
+    var callback: ((context: Context?, tweak: Tweak) -> Unit)? = null
+) {
 
-    internal var value: Any by TweakValueDelegate(toString(), type.getValue())
+    companion object;
+
+    internal var value: Any by TweakValueDelegate(this, type.getValue())
+
+    var isChanged: Boolean = false
+        internal set
 
     var boolValue: Boolean = false
         get() {
@@ -35,6 +45,13 @@ data class Tweak(
         }
         private set
 
+    var doubleValue: Double = 0.0
+        get() {
+            return value as? Double ?: field
+        }
+        private set
+
+
     /**
      * reset the value to default
      */
@@ -42,35 +59,11 @@ data class Tweak(
         value = type.getDefault()
     }
 
+    /**
+     * tweak key
+     */
     override fun toString(): String {
-
         return "${collection}_${category}_$title"
     }
-
-    /* parcelable start*/
-    constructor(source: Parcel) : this(
-        source.readString(),
-        source.readString(),
-        source.readString(),
-        source.readSerializable() as TweakType
-    )
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeString(collection)
-        writeString(category)
-        writeString(title)
-        writeSerializable(type)
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<Tweak> = object : Parcelable.Creator<Tweak> {
-            override fun createFromParcel(source: Parcel): Tweak = Tweak(source)
-            override fun newArray(size: Int): Array<Tweak?> = arrayOfNulls(size)
-        }
-    }
-    /* parcelable end*/
 
 }

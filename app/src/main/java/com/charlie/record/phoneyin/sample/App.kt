@@ -11,7 +11,8 @@ class App : Application() {
 
         if (Utils.isDebug(this)) {
             Log.d("debug", "debug true")
-            TweakManager.with(this).setPersistent(true).setShakeEnable(true).init(ExampleTweakLibrary)
+            TweakManager.with(this).setLibrary(ExampleTweakLibrary).setPersistent(true).setShakeEnable(true)
+                .init(ExampleTweakLibrary)
         }
     }
 

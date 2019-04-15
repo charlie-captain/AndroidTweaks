@@ -11,7 +11,7 @@ Tweak your Android app without compiling
 ### App
 
 ```
-TweakManager.with(this).setPersistent(true).setFloatWindow(true).setShakeEnable(true).init()
+TweakManager.with(this).setLibrary(xxxLibrary).setPersistent(true).setFloatWindow(true).setShakeEnable(true).init()
 ```
 
 ### object : TweakLibrary
@@ -33,7 +33,8 @@ object DebugLibrary : TweakLibrary() {
 
     //there should add the tweaks into the list, like : longPressToSavePOPIcon, xxxTweaks, ...
     override val tweakStore = TweakStore().listOf(
-            longPressToSaveIcon
+            longPressToSaveIcon,
+            //add your tweak here
     )
 
 }
@@ -77,7 +78,7 @@ DebugLibrary.value(key)
 ### start TweakConfig
 ```
 btn.setOnClickListener {
-    TweakManager.start(DebugLibrary)
+    TweakManager.start()
 }
 ```
 

@@ -59,4 +59,5 @@ abstract class TweakBaseFragment : PreferenceFragmentCompat() {
             }
         }
     }
+
 }

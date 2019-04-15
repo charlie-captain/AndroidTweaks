@@ -34,6 +34,14 @@ object TweakManager {
         return this
     }
 
+    /**
+     * must behind init
+     */
+    fun setLibrary(library: TweakLibrary): TweakManager {
+        this.library = library
+        return this
+    }
+
     fun setPersistent(isPersistent: Boolean): TweakManager {
         this.isPersistent = isPersistent
         return this

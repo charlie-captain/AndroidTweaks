@@ -3,30 +3,23 @@ package com.charlie.androidtweaks.utils
 import android.util.Log
 import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.TAG_ANDROIDTWEAKS
+import com.charlie.androidtweaks.data.Tweak
 import kotlin.reflect.KProperty
 
-class TweakValueDelegate<T>(val name: String, val default: T) {
+class TweakValueDelegate<T>(val tweak: Tweak, val default: T) {
 
     private val sharedPreferences = TweakManager.sharedPreferences
 
     private var mSaveValue: Any? = null
 
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): T = getTweakValue(name, default)
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T = getTweakValue(tweak.toString(), default)
 
-    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = putTweakValue(name, value)
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = putTweakValue(tweak.toString(), value)
 
-    private fun <T> putTweakValue(key: String, value: T) = with(sharedPreferences?.edit()) {
-        Log.d(TAG_ANDROIDTWEAKS, "putValue $key   $value")
+    private fun <T> putTweakValue(key: String, value: T) = with(sharedPreferences.edit()) {
+        //        Log.d(TAG_ANDROIDTWEAKS, "putValue $key   $value")
         try {
-            when (value) {
-                is Int -> this?.putInt(key, value)?.apply()
-                is Boolean -> this?.putBoolean(key, value)?.apply()
-                is Float -> this?.putFloat(key, value)?.apply()
-                is String -> this?.putString(key, value)?.apply()
-                else -> {
-                    throw IllegalArgumentException("SharePreference can't put this value.")
-                }
-            }
+            this.putString(key, value.toString())?.apply()
             mSaveValue = value
         } catch (e: Exception) {
             Log.d(TAG_ANDROIDTWEAKS, e.toString())
@@ -35,27 +28,36 @@ class TweakValueDelegate<T>(val name: String, val default: T) {
 
     private fun getTweakValue(key: String, default: T): T = with(sharedPreferences) {
         if (mSaveValue != null) {
-            Log.d(TAG_ANDROIDTWEAKS, "restore KeyValue $key")
+//            Log.d(TAG_ANDROIDTWEAKS, "restore Key=$key value = $mSaveValue")
             return mSaveValue as T
         }
-        var value: Any? = null
         try {
-            value = when (default) {
-                is Int -> this?.getInt(key, default)
-                is Boolean -> this?.getBoolean(key, default)
-                is Float -> this?.getFloat(key, default)
-                is String -> this?.getString(key, default)
-                else -> {
-                    throw IllegalArgumentException("SharePreference can't get this value.")
+            val value = this.getString(key, null)
+            if (value == null) {
+//                Log.d(TAG_ANDROIDTWEAKS, "getDefault $key   $default")
+                mSaveValue = default
+                return default
+            } else {
+                val result = when (default) {
+                    is Int -> value.toInt()
+                    is Boolean -> value.toBoolean()
+                    is Float -> value.toFloat()
+                    is String -> value
+                    is Double -> value.toDouble()
+                    else -> {
+                        throw IllegalArgumentException("SharePreference can't get this value.")
+                    }
                 }
+                tweak.isChanged = true
+                mSaveValue = result
+//                Log.d(TAG_ANDROIDTWEAKS, "getValue $key   $result")
+                return result as T
             }
-            mSaveValue = value
         } catch (e: ClassCastException) {
             //remove the key
-            this?.edit()?.remove(key)?.apply()
+            this.edit().remove(key).apply()
             Log.d(TAG_ANDROIDTWEAKS, e.toString())
+            return default
         }
-        Log.d(TAG_ANDROIDTWEAKS, "getValue $key   $value")
-        return if (value == null) default else value as T
     }
 }
