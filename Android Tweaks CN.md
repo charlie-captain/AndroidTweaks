@@ -1,5 +1,6 @@
 # AndroidTweaks
 不需要重新编译，就可以修改view的参数，保存你想保存的值。
+> 全kotlin编码，支持AndroidX, Support 
 
 ## 如何使用
 
