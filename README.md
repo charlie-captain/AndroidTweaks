@@ -6,7 +6,7 @@ Tweak your Android app without compiling
 ## [Release Note](https://github.com/charlie-captain/AndroidTweaks/blob/master/Release%20Note.md)
 ## How to use
 
->It's temporarily unstable, so I won't upload to the bintray
+>It's temporarily unstable, so I won't upload to the bintray, so you need to import it into your project
 
 ### App
 
