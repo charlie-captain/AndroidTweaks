@@ -3,13 +3,13 @@
 
 ## How to use
 
->因为他还不够稳定，所以我没有上传到bintray
+>因为他还不够稳定，所以我没有上传到bintray，所以你需要将它导入到你的项目里去。
 
 
 ### App
 
 ```
-TweakManager.with(this).setPersistent(true).setFloatWindow(true).setShakeEnable(true).init()
+TweakManager.with(this).setLibrary(xxxLibrary).setPersistent(true).setFloatWindow(true).setShakeEnable(true).init()
 ```
 
 ### object 继承 TweakLibrary
