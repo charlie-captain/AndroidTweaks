@@ -1,4 +1,9 @@
 # Release Note
+
+### 0.5 
+改为范型，直接调用value
+
+
 ### 0.4
 add shake to debug [ 新增 摇一摇进入Tweak ]
 

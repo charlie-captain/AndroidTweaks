@@ -70,10 +70,10 @@ dynamic tweaks
 ### getValue
 ```
 //static
-DebugLibrary.longPressToSaveIcon.boolValue / floatValue / stringValue
+DebugLibrary.longPressToSaveIcon.value
 
 //get dynamic tweaks
-DebugLibrary.value(key)
+DebugLibrary.value(key,default)
 ```
 ### start TweakConfig
 ```
@@ -90,4 +90,4 @@ welcome to work with me to make this library better!
 email: charlie.captain@foxmail.com
 
 ## Thanks
-https://github.com/Khan/SwiftTweaks
+<https://github.com/Khan/SwiftTweaks>

@@ -67,10 +67,10 @@ object DebugLibrary : TweakLibrary() {
 ### 获取值
 ```
 //静态
-DebugLibrary.longPressToSaveIcon.boolValue \ floatValue \ stringValue
+DebugLibrary.longPressToSaveIcon.value
 
 //动态添加的tweaks
-DebugLibrary.value(key)
+DebugLibrary.value(key,default)
 ```
 ### 启动Tweak程序
 ```
