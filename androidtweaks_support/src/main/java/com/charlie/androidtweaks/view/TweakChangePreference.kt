@@ -18,7 +18,12 @@ class TweakChangePreference : Preference, View.OnClickListener {
     private var mAddButton: ImageButton? = null
     private var mMinusButton: ImageButton? = null
 
-    internal var mMin: Float = 0f
+    /**
+     * 是否Float类型
+     */
+    internal var mIsFloat: Boolean = false
+
+    internal var mMin: Double = 0.0
         set(min) {
             if (min != field && min <= mMax) {
                 field = min
@@ -26,15 +31,22 @@ class TweakChangePreference : Preference, View.OnClickListener {
             }
         }
 
-    internal var mMax: Float = 100f
+    internal var mMax: Double = 100.0
         set(max) {
-            if (max != field && max >= field) {
+            if (max != field) {
                 field = max
+                if (max < mMin) {
+                    //如果小于最小则加一个field
+                    field += mMin
+                }
                 notifyChanged()
             }
         }
 
-    internal var mIncrement: Float = 1f
+    /**
+     * 增量
+     */
+    internal var mIncrement: Double = 1.0
         set(increment) {
             if (increment != field) {
                 field = increment
@@ -42,7 +54,7 @@ class TweakChangePreference : Preference, View.OnClickListener {
             }
         }
 
-    internal var mValue: Float = 0f
+    internal var mValue: Double = 0.0
 
     /**
      * 是否为负数
@@ -82,18 +94,17 @@ class TweakChangePreference : Preference, View.OnClickListener {
         v ?: return
         when (v.id) {
             R.id.tweaks_change_add -> {
-
-                val newValue = BigDecimal(mValue.toString()) + BigDecimal(mIncrement.toString())
-                setValue(newValue.toFloat())
+                val newValue = BigDecimal(mValue.toString()).add(BigDecimal(mIncrement.toString()))
+                setValue(newValue.toDouble())
             }
             R.id.tweaks_change_minus -> {
-                val newValue = BigDecimal(mValue.toString()) - BigDecimal(mIncrement.toString())
-                setValue(newValue.toFloat())
+                val newValue = BigDecimal(mValue.toString()).subtract(BigDecimal(mIncrement.toString()))
+                setValue(newValue.toDouble())
             }
         }
     }
 
-    fun setValue(value: Float) {
+    fun setValue(value: Double) {
         if (mValue != value) {
             if (!isNegative && value < 0) {
                 //不可为负数
@@ -107,7 +118,11 @@ class TweakChangePreference : Preference, View.OnClickListener {
             mValueTextView?.let {
                 it.text = "$mValue"
             }
-            callChangeListener(mValue)
+            if (mIsFloat) {
+                callChangeListener(mValue.toFloat())
+            } else {
+                callChangeListener(mValue)
+            }
         }
     }
 }

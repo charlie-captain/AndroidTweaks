@@ -59,21 +59,21 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        Log.d("aaa", "${ExampleTweakLibrary.switchButton1.boolValue}")
+        Log.d("aaa", "${ExampleTweakLibrary.switchButton1.value}")
 
         btn_example.visibility =
-                if (ExampleTweakLibrary.switchButton1.boolValue) View.VISIBLE else View.INVISIBLE
+            if (ExampleTweakLibrary.switchButton1.value) View.VISIBLE else View.INVISIBLE
 
 
-        val width = ExampleTweakLibrary.value("UI_button_width", 200f)
-        val height = ExampleTweakLibrary.value("UI_button_height", 200f)
+        val width: Float = ExampleTweakLibrary.value("UI_button_width", 200f)
+        val height: Float = ExampleTweakLibrary.value("UI_button_height", 200f)
 
         val layout = btn_example.layoutParams
         layout.width = width.toInt()
         layout.height = height.toInt()
         btn_example.layoutParams = layout
 
-        text.text = ExampleTweakLibrary.stringtext.stringValue
+        text.text = ExampleTweakLibrary.stringtext.value
 
     }
 }

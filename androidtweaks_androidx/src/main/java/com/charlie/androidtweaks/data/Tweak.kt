@@ -11,52 +11,37 @@ import com.charlie.androidtweaks.utils.TweakValueDelegate
  * @param type 参考TweakType
  * @param callback 回调接口，在数据发生变化时
  */
-data class Tweak(
+data class Tweak<T>(
     val collection: String,
     val category: String,
     val title: String,
-    val type: TweakType,
-    var callback: ((context: Context?, tweak: Tweak) -> Unit)? = null
+    val type: TweakType<T>,
+    var callback: ((context: Context?, tweak: Tweak<T>) -> Unit)? = null
 ) {
+
 
     companion object;
 
-    internal var value: Any by TweakValueDelegate(this, type.getValue())
+    //fake delegate
+    private val tweakValueDelegate: TweakValueDelegate<T> = TweakValueDelegate()
 
-    var isChanged: Boolean = false
-        internal set
+    var value: T
+        internal set(value) = tweakValueDelegate.putTweakValue(toString(), value)
+        get() = tweakValueDelegate.getTweakValue(toString(), type.getDefault())
 
-    var boolValue: Boolean = false
+    val isChanged: Boolean
         get() {
-            return value as? Boolean ?: field
+            if (!tweakValueDelegate.isInit) {
+                value
+            }
+            return tweakValueDelegate.savedValue != null
         }
-        private set
-
-    var floatValue: Float = 0f
-        get() {
-            return value as? Float ?: field
-
-        }
-        private set
-
-    var stringValue: String = String()
-        get() {
-            return value as? String ?: field
-        }
-        private set
-
-    var doubleValue: Double = 0.0
-        get() {
-            return value as? Double ?: field
-        }
-        private set
-
 
     /**
      * reset the value to default
      */
     fun reset() {
-        value = type.getDefault()
+        tweakValueDelegate.reset()
     }
 
     /**

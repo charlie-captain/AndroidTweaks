@@ -13,16 +13,18 @@ import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_IS_KEY
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_KEY
+import com.charlie.androidtweaks.utils.SharePreferenceDelegate
 import com.charlie.androidtweaks.utils.TweakPermissionUtil
-import com.charlie.androidtweaks.utils.TweakValueDelegate
 import com.charlie.androidtweaks.window.TweakWindowManager
 import com.charlie.androidtweaks.window.TweakWindowService
 import kotlinx.android.synthetic.main.tweaks_toolbar.*
 
-private const val TITLE_TOOLBAR = "Tweaks"
-
 class TweakActivity : AppCompatActivity() {
+
     private var baseFragmentFragment: TweakFragment? = null
+
+    private val TITLE_TOOLBAR = "Tweaks"
+
     private var floatWindowKey: String? = null
 
     companion object {
@@ -45,7 +47,7 @@ class TweakActivity : AppCompatActivity() {
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         floatWindowKey = intent.getStringExtra(SP_TWEAKS_FLOAT_WINDOW_KEY)
-        val isFloat by TweakValueDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
+        var isFloat by SharePreferenceDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
         if (isFloat) {
             stopService(Intent(this, TweakWindowService::class.java))
         }
@@ -53,11 +55,6 @@ class TweakActivity : AppCompatActivity() {
         supportFragmentManager.inTransaction {
             replace(R.id.fl_tweak, baseFragmentFragment!!)
         }
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-
     }
 
     fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit) {
@@ -82,7 +79,7 @@ class TweakActivity : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         if (TweakManager.isFloatWindow) {
-            val isFloat by TweakValueDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
+            val isFloat by SharePreferenceDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
             menu?.findItem(R.id.menu_toolbar_tweak_close_window)?.isVisible = isFloat
         }
         return super.onPrepareOptionsMenu(menu)
@@ -93,12 +90,12 @@ class TweakActivity : AppCompatActivity() {
             R.id.menu_toolbar_tweak_dissmiss -> {
                 if (TweakManager.isFloatWindow) {
                     if (TweakPermissionUtil.checkPermission(this)) {
-                        var putTweaks by TweakValueDelegate(
+                        var putTweaks by SharePreferenceDelegate(
                             SP_TWEAKS_FLOAT_WINDOW_KEY,
                             baseFragmentFragment?.floatTweak
                         )
                         putTweaks = baseFragmentFragment?.floatTweak
-                        var isFloat by TweakValueDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, true)
+                        var isFloat by SharePreferenceDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, true)
                         isFloat = true
                         startService(Intent(this, TweakWindowService::class.java))
                     } else {
@@ -109,7 +106,7 @@ class TweakActivity : AppCompatActivity() {
             }
             R.id.menu_toolbar_tweak_close_window -> {
                 if (TweakManager.isFloatWindow) {
-                    var isFloat by TweakValueDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
+                    var isFloat by SharePreferenceDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
                     isFloat = false
                     TweakWindowManager.saveLayoutParams()
                     stopService(Intent(this, TweakWindowService::class.java))
@@ -134,7 +131,7 @@ class TweakActivity : AppCompatActivity() {
             object : TweakPermissionUtil.OnPermissionListener {
                 override fun onPermissionGranted(isGranted: Boolean) {
                     if (isGranted) {
-                        val putTweaks by TweakValueDelegate(
+                        val putTweaks by SharePreferenceDelegate(
                             SP_TWEAKS_FLOAT_WINDOW_KEY,
                             baseFragmentFragment?.floatTweak
                         )
@@ -152,7 +149,7 @@ class TweakActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        var isFloat by TweakValueDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
+        var isFloat by SharePreferenceDelegate(SP_TWEAKS_FLOAT_WINDOW_IS_KEY, false)
         if (isFloat) {
             startService(Intent(this, TweakWindowService::class.java))
         }

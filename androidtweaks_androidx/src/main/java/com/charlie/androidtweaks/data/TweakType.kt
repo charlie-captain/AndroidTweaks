@@ -1,22 +1,16 @@
 package com.charlie.androidtweaks.data
 
-abstract class TweakType {
-    abstract fun getValue(): Any
-    abstract fun getDefault(): Any
+abstract class TweakType<out T> {
+    abstract fun getDefault(): T
 }
 
 /**
  * Boolean
  * @param isGroup: 是否群组，如果为false，同category下的preference enable为false
  */
-class TweakBool(val defaultValue: Boolean, val isGroup: Boolean = false) : TweakType() {
-    private var value: Boolean = defaultValue
+class TweakBool(val defaultValue: Boolean, val isGroup: Boolean = false) : TweakType<Boolean>() {
 
-    override fun getValue(): Any {
-        return value
-    }
-
-    override fun getDefault(): Any {
+    override fun getDefault(): Boolean {
         return defaultValue
     }
 }
@@ -32,14 +26,9 @@ class TweakFloat(
     val min: Float = 0f,
     val max: Float = 100f,
     val isNegative: Boolean = false
-) : TweakType() {
-    private var value: Float = defaultValue
+) : TweakType<Float>() {
 
-    override fun getValue(): Any {
-        return value
-    }
-
-    override fun getDefault(): Any {
+    override fun getDefault(): Float {
         return defaultValue
     }
 
@@ -48,13 +37,9 @@ class TweakFloat(
 /**
  * String
  */
-class TweakString(val defaultValue: String) : TweakType() {
-    private var value: String = defaultValue
-    override fun getValue(): Any {
-        return value
-    }
+class TweakString(val defaultValue: String) : TweakType<String>() {
 
-    override fun getDefault(): Any {
+    override fun getDefault(): String {
         return defaultValue
     }
 
@@ -69,13 +54,9 @@ class TweakDouble(
     val min: Double = 0.0,
     val max: Double = 100.0,
     val isNegative: Boolean = false
-) : TweakType() {
-    private var value: Double = defaultValue
-    override fun getValue(): Any {
-        return value
-    }
+) : TweakType<Double>() {
 
-    override fun getDefault(): Any {
+    override fun getDefault(): Double {
         return defaultValue
     }
 

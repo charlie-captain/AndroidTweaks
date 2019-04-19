@@ -6,21 +6,24 @@ abstract class TweakLibrary {
 
     abstract val tweakStore: TweakStore
 
-    fun add(tweak: Tweak) {
+    fun add(tweak: Tweak<*>) {
         tweakStore.tweaks.add(tweak)
     }
 
+    /**
+     * use for dynamic tweak
+     */
     fun <T> value(key: String, default: T): T {
-        val tweak = tweakStore.valueOfTweak(key)
-        return if (tweak == null) default else tweak?.value as T
+        val value: T? = tweakStore.valueOfTweak(key)
+        return value ?: default
     }
 
 
-    fun addAll(tweaks: ArrayList<Tweak>) {
+    fun addAll(tweaks: ArrayList<Tweak<*>>) {
         tweakStore.tweaks.addAll(tweaks)
     }
 
-    internal fun reset() {
+    fun reset() {
         tweakStore.reset()
     }
 

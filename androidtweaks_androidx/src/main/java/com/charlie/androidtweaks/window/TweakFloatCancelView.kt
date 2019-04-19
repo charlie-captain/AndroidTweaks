@@ -4,11 +4,11 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
+import androidx.core.content.ContextCompat
 import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.utils.TweakUtil
 

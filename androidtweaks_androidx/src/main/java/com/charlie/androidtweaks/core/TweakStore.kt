@@ -4,24 +4,24 @@ import com.charlie.androidtweaks.data.Tweak
 
 class TweakStore {
 
-    internal var tweaks: ArrayList<Tweak> = arrayListOf()
+    internal var tweaks: ArrayList<Tweak<*>> = arrayListOf()
 
-    internal fun valueOfTweak(key: String): Tweak? {
+    fun <T> valueOfTweak(key: String): T? {
         for (tweak in tweaks) {
             if (tweak.toString() == key) {
-                return tweak
+                return tweak.value as? T ?: tweak.type.getDefault() as T?
             }
         }
         return null
     }
 
-    internal fun reset() {
+    fun reset() {
         for (tweak in tweaks) {
             tweak.reset()
         }
     }
 
-    fun listOf(vararg elements: Tweak): TweakStore {
+    fun listOf(vararg elements: Tweak<*>): TweakStore {
         tweaks.addAll(elements)
         return this
     }
