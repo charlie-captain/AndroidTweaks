@@ -1,6 +1,8 @@
 # AndroidTweaks
 Tweak your Android app without compiling
 
+[![HitCount](http://hits.dwyl.io/charlie-captain/AndroidTweaks.svg)](http://hits.dwyl.io/charlie-captain/AndroidTweaks)
+
 [中文文档](https://github.com/charlie-captain/AndroidTweaks/blob/master/Android%20Tweaks%20CN.md)
 
 ## [Release Note](https://github.com/charlie-captain/AndroidTweaks/blob/master/Release%20Note.md)
