@@ -84,6 +84,12 @@ btn.setOnClickListener {
 }
 ```
 
+### Other
+- custom menu option
+
+```
+startActivity(your menuItems)
+```
 ---
 
 ## Issue or Pull requests
