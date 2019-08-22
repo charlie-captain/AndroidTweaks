@@ -13,6 +13,7 @@ import com.charlie.androidtweaks.R
 import com.charlie.androidtweaks.core.TweakManager
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_IS_KEY
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_KEY
+import com.charlie.androidtweaks.data.TweakMenuItem
 import com.charlie.androidtweaks.utils.SharePreferenceDelegate
 import com.charlie.androidtweaks.utils.TweakPermissionUtil
 import com.charlie.androidtweaks.window.TweakWindowManager
@@ -27,7 +28,12 @@ class TweakActivity : AppCompatActivity() {
 
     private var floatWindowKey: String? = null
 
+    //custom menu list
+    private var menuList: ArrayList<TweakMenuItem>? = null
+
     companion object {
+
+        const val TWEAK_ARGS_MENU = "tweak_args_menu"
 
         fun start(context: Context, tweakKey: String = "") {
             val intent = Intent(context, TweakActivity::class.java)
@@ -55,6 +61,9 @@ class TweakActivity : AppCompatActivity() {
         supportFragmentManager.inTransaction {
             replace(R.id.fl_tweak, baseFragmentFragment!!)
         }
+
+        menuList = intent.getParcelableArrayListExtra(TWEAK_ARGS_MENU)
+
     }
 
     fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit) {
@@ -73,7 +82,13 @@ class TweakActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_tweaks_toolbar, menu)
+        if (menuList.isNullOrEmpty()) {
+            menuInflater.inflate(R.menu.menu_tweaks_toolbar, menu)
+        } else {
+            menuList?.forEach { item ->
+                menu?.add(item.groupId ?: Menu.NONE, item.itemId, Menu.NONE, item.title)
+            }
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -115,6 +130,13 @@ class TweakActivity : AppCompatActivity() {
             R.id.menu_toolbar_tweak_reset -> {
                 TweakManager.reset()
                 finish()
+            }
+            else -> {
+                item?.let { menu ->
+                    menuList?.indexOfFirst { menu.itemId == it.itemId }?.let { menuList?.get(it) }?.let {
+                        TweakManager.onTweakMenuItemClickListener?.onTweakMenuItemClick(it)
+                    }
+                }
             }
         }
         return super.onOptionsItemSelected(item)

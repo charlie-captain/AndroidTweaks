@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Bundle
+import com.charlie.androidtweaks.data.TweakMenuItem
 import com.charlie.androidtweaks.shake.TweakShakeService
 import com.charlie.androidtweaks.ui.TweakActivity
 import com.charlie.androidtweaks.window.TweakLifeCyclerCallback
@@ -24,6 +26,8 @@ object TweakManager {
     internal lateinit var sharedPreferences: SharedPreferences
 
     private var isShakeEnable = false
+
+    var onTweakMenuItemClickListener: OnTweakMenuItemClickListener? = null
 
     /**
      * App init
@@ -98,15 +102,28 @@ object TweakManager {
     }
 
     /**
+     * custom tweak activity menu
+     */
+    fun setOnTweakMenuItemClickListener(onTweakMenuItemClickListener: OnTweakMenuItemClickListener): TweakManager {
+        this.onTweakMenuItemClickListener = onTweakMenuItemClickListener
+        return this
+    }
+
+    /**
      * start TweakActivity
      */
-    fun start(tweakLibrary: TweakLibrary) {
-        library = tweakLibrary
+    fun startActivity(menuItems: ArrayList<TweakMenuItem>? = null) {
         weakReference?.get()?.let {
             if (library == null) {
                 throw NullPointerException("tweak library can't be null")
             }
             val intent = Intent(it, TweakActivity::class.java)
+
+            menuItems?.let {
+                intent.putExtras(Bundle().apply {
+                    this.putParcelableArrayList(TweakActivity.TWEAK_ARGS_MENU, it)
+                })
+            }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             it.startActivity(intent)
         }
@@ -127,4 +144,7 @@ object TweakManager {
     fun getTweaks() = library?.getTweaks()
 
 
+    interface OnTweakMenuItemClickListener {
+        fun onTweakMenuItemClick(item: TweakMenuItem)
+    }
 }
