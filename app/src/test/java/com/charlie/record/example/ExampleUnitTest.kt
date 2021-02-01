@@ -1,4 +1,4 @@
-package com.charlie.record.phoneyin
+package com.charlie.record.example
 
 import org.junit.Test
 

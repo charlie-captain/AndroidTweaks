@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
+import com.charlie.androidtweaks.data.TAG_ANDROIDTWEAKS
+import com.charlie.androidtweaks.data.Tweak
 import com.charlie.androidtweaks.data.TweakMenuItem
 import com.charlie.androidtweaks.shake.TweakShakeService
 import com.charlie.androidtweaks.ui.TweakActivity
@@ -87,8 +90,8 @@ object TweakManager {
     /**
      * init
      */
-    fun init(tweakLibrary: TweakLibrary?) {
-        library = tweakLibrary ?: return
+    fun init() {
+        requireNotNull(library) { "library must not be null!" }
         weakReference?.get()?.let {
             checkShakeConfig(it)
         }
@@ -113,20 +116,41 @@ object TweakManager {
      * start TweakActivity
      */
     fun startActivity(menuItems: ArrayList<TweakMenuItem>? = null) {
-        weakReference?.get()?.let {
-            if (library == null) {
-                throw NullPointerException("tweak library can't be null")
-            }
-            val intent = Intent(it, TweakActivity::class.java)
+        val context = weakReference?.get() ?: return
+        val tweakLibrary = library
+        requireNotNull(tweakLibrary) { "tweak library can't be null" }
 
-            menuItems?.let {
-                intent.putExtras(Bundle().apply {
-                    this.putParcelableArrayList(TweakActivity.TWEAK_ARGS_MENU, it)
-                })
+        if (tweakLibrary.tweakStore.isEmpty()) {
+            //reflect class to tweak, add to list
+            val list = ArrayList<Tweak<*>>()
+            tweakLibrary.javaClass.declaredFields.forEach { field ->
+                try {
+                    if (field.type == Lazy::class.java) {
+                        //init lazy value
+                        field.isAccessible = true
+                        val lazyTweak = (field.get(this) as? Lazy<*>)?.value as? Tweak<*>
+                        if (lazyTweak != null) {
+                            list.add(lazyTweak)
+                        }
+                    } else if (field.type == Tweak::class.java) {
+                        field.isAccessible = true
+                        val tweak = field.get(null) as Tweak<*>
+                        list.add(tweak)
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG_ANDROIDTWEAKS, "", e)
+                }
             }
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            it.startActivity(intent)
+            tweakLibrary.addAll(list)
         }
+        val intent = Intent(context, TweakActivity::class.java)
+        menuItems?.let {
+            intent.putExtras(Bundle().apply {
+                this.putParcelableArrayList(TweakActivity.TWEAK_ARGS_MENU, it)
+            })
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
     /**

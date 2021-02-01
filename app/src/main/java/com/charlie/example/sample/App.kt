@@ -1,4 +1,4 @@
-package com.charlie.record.phoneyin.sample
+package com.charlie.example.sample
 
 import android.app.Application
 import android.util.Log
@@ -12,7 +12,7 @@ class App : Application() {
         if (Utils.isDebug(this)) {
             Log.d("debug", "debug true")
             TweakManager.with(this).setLibrary(ExampleTweakLibrary).setPersistent(true).setShakeEnable(true)
-                .init(ExampleTweakLibrary)
+                .init()
         }
     }
 

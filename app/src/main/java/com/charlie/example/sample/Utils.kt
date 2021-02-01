@@ -1,4 +1,4 @@
-package com.charlie.record.phoneyin.sample
+package com.charlie.example.sample
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
