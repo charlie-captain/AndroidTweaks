@@ -31,56 +31,22 @@ object DebugLibrary : TweakLibrary() {
      *
      */
 
-    val longPressToSaveIcon = Tweak("UI", "LongPress", "save icon", TweakBool(false))
-
-    //there should add the tweaks into the list, like : longPressToSavePOPIcon, xxxTweaks, ...
-    override val tweakStore = TweakStore().listOf(
-            longPressToSaveIcon,
-            //add your tweak here
-    )
+    val longPressToSaveIcon by lazy { Tweak("UI", "LongPress", "save icon", TweakBool(false)) }
 
 }
 ```
 
-dynamic tweaks
-
-```
-    val screenWidth = resources.displayMetrics.widthPixels
-    val screenHeight = resources.displayMetrics.heightPixels
-
-    //example
-    DebugLibrary.add(
-        Tweak(
-            "UI",
-            "button",
-            "width",
-            TweakInt(btn_width,0,screenWidth)
-        )
-    )
-
-    //button_height
-    DebugLibrary.add(
-        Tweak(
-            "UI",
-            "button",
-            "height",
-            TweakInt(btn_height,0,screenHeight)
-        )
-    )
-```
-
 ### getValue
-```
-//static
-DebugLibrary.longPressToSaveIcon.value
 
-//get dynamic tweaks
-DebugLibrary.value(key,default)
 ```
+DebugLibrary.longPressToSaveIcon.value
+```
+
 ### start TweakConfig
+
 ```
 btn.setOnClickListener {
-    TweakManager.start()
+    TweakManager.startActivity()
 }
 ```
 
