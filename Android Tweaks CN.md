@@ -15,7 +15,7 @@ TweakManager.with(this).setLibrary(xxxLibrary).setPersistent(true).setFloatWindo
 
 ### object 继承 TweakLibrary
 
-此处定义静态的Tweaks，现在支持两种类型，int和bool
+此处定义静态的Tweak
 ```
 object DebugLibrary : TweakLibrary() {
 
@@ -28,61 +28,27 @@ object DebugLibrary : TweakLibrary() {
      *
      */
 
-    val longPressToSaveIcon = Tweak("UI", "LongPress", "save icon", TweakBool(false))
-
-    //这里必须加上上面定义的Tweaks, 比如: longPressToSaveIcon, xxxTweaks, ...
-    override val tweakStore = TweakStore().listOf(
-            longPressToSaveIcon
-    )
+    val longPressToSaveIcon by lazy { Tweak("UI", "LongPress", "save icon", TweakBool(false)) }
 
 }
-```
-
-动态定义Tweak，主要是为了方便设置一个默认值
-
-```
-    val screenWidth = resources.displayMetrics.widthPixels
-    val screenHeight = resources.displayMetrics.heightPixels
-    //动态添加,下面举个例子
-    DebugLibrary.add(
-        Tweak(
-            "UI",
-            "button",
-            "width",
-            TweakInt(btn_width,0,screenWidth)
-        )
-    )
-
-    //button高度
-    DebugLibrary.add(
-        Tweak(
-            "UI",
-            "button",
-            "height",
-            TweakInt(btn_height,0,screenHeight)
-        )
-    )
 ```
 
 ### 获取值
 ```
 //静态
 DebugLibrary.longPressToSaveIcon.value
-
-//动态添加的tweaks
-DebugLibrary.value(key,default)
 ```
+
+
 ### 启动Tweak程序
 ```
 btn.setOnClickListener {
-    TweakManager.start(DebugLibrary)
+    TweakManager.startActivity()
 }
 ```
 
 ## Issue or Pull requests
 欢迎大家一起和我来完善这个库
-
-email: charlie.captain@foxmail.com
 
 ## 感谢
 https://github.com/Khan/SwiftTweaks

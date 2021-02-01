@@ -61,7 +61,5 @@ startActivity(your menuItems)
 ## Issue or Pull requests
 welcome to work with me to make this library better!
 
-email: charlie.captain@foxmail.com
-
 ## Thanks
 <https://github.com/Khan/SwiftTweaks>
