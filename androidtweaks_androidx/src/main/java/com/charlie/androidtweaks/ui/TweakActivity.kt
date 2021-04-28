@@ -15,6 +15,7 @@ import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_IS_KEY
 import com.charlie.androidtweaks.data.SP_TWEAKS_FLOAT_WINDOW_KEY
 import com.charlie.androidtweaks.data.TweakMenuItem
 import com.charlie.androidtweaks.utils.SharePreferenceDelegate
+import com.charlie.androidtweaks.utils.TWEAK_REQUESET_CODE_PERMIISION
 import com.charlie.androidtweaks.utils.TweakPermissionUtil
 import com.charlie.androidtweaks.window.TweakWindowManager
 import com.charlie.androidtweaks.window.TweakWindowService
@@ -48,6 +49,7 @@ class TweakActivity : AppCompatActivity() {
         setContentView(R.layout.activity_tweak)
         tweaks_toolbar.title = TITLE_TOOLBAR
         setSupportActionBar(tweaks_toolbar)
+        TweakManager.tweakMenu?.attachActivity(this)
         tweaks_toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
@@ -134,7 +136,7 @@ class TweakActivity : AppCompatActivity() {
             else -> {
                 item?.let { menu ->
                     menuList?.indexOfFirst { menu.itemId == it.itemId }?.let { menuList?.get(it) }?.let {
-                        TweakManager.onTweakMenuItemClickListener?.onTweakMenuItemClick(it)
+                        TweakManager.tweakMenu?.onTweakMenuItemClick(it)
                     }
                 }
             }
@@ -145,28 +147,32 @@ class TweakActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        TweakPermissionUtil.onActivityResult(
-            this,
-            requestCode,
-            resultCode,
-            data,
-            object : TweakPermissionUtil.OnPermissionListener {
-                override fun onPermissionGranted(isGranted: Boolean) {
-                    if (isGranted) {
-                        val putTweaks by SharePreferenceDelegate(
-                            SP_TWEAKS_FLOAT_WINDOW_KEY,
-                            baseFragmentFragment?.floatTweak
-                        )
-                        startService(Intent(this@TweakActivity, TweakWindowService::class.java))
-                    } else {
-                        Toast.makeText(
-                            this@TweakActivity,
-                            getString(R.string.string_toast_float_window_permission),
-                            Toast.LENGTH_LONG
-                        )
+        if (requestCode == TWEAK_REQUESET_CODE_PERMIISION) {
+            TweakPermissionUtil.onActivityResult(
+                this,
+                requestCode,
+                resultCode,
+                data,
+                object : TweakPermissionUtil.OnPermissionListener {
+                    override fun onPermissionGranted(isGranted: Boolean) {
+                        if (isGranted) {
+                            val putTweaks by SharePreferenceDelegate(
+                                SP_TWEAKS_FLOAT_WINDOW_KEY,
+                                baseFragmentFragment?.floatTweak
+                            )
+                            startService(Intent(this@TweakActivity, TweakWindowService::class.java))
+                        } else {
+                            Toast.makeText(
+                                this@TweakActivity,
+                                getString(R.string.string_toast_float_window_permission),
+                                Toast.LENGTH_LONG
+                            )
+                        }
                     }
-                }
-            })
+                })
+        } else {
+            TweakManager.tweakMenu?.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     override fun onStop() {
@@ -175,5 +181,10 @@ class TweakActivity : AppCompatActivity() {
         if (isFloat) {
             startService(Intent(this, TweakWindowService::class.java))
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        TweakManager.tweakMenu?.detachActivity()
     }
 }

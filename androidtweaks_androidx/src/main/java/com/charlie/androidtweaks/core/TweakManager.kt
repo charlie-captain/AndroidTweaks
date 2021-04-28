@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import com.charlie.androidtweaks.data.TAG_ANDROIDTWEAKS
 import com.charlie.androidtweaks.data.Tweak
+import com.charlie.androidtweaks.data.TweakMenu
 import com.charlie.androidtweaks.data.TweakMenuItem
 import com.charlie.androidtweaks.shake.TweakShakeService
 import com.charlie.androidtweaks.ui.TweakActivity
@@ -30,7 +31,10 @@ object TweakManager {
 
     private var isShakeEnable = false
 
-    var onTweakMenuItemClickListener: OnTweakMenuItemClickListener? = null
+    internal var tweakMenu: TweakMenu? = null
+        private set
+
+    private var menuClass: Class<*>? = null
 
     /**
      * App init
@@ -105,10 +109,11 @@ object TweakManager {
     }
 
     /**
-     * custom tweak activity menu
+     * set tweak menu class name
+     * lazy init tweak menu @see[startActivity]
      */
-    fun setOnTweakMenuItemClickListener(onTweakMenuItemClickListener: OnTweakMenuItemClickListener): TweakManager {
-        this.onTweakMenuItemClickListener = onTweakMenuItemClickListener
+    fun <T : TweakMenu> setMenuName(menuClass: Class<T>): TweakManager {
+        this.menuClass = menuClass
         return this
     }
 
